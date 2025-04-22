@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Predicting_vector_abundance_in_Lithuania
 
 Using hierarchical spatial-temporal models implemented in R-INLA to

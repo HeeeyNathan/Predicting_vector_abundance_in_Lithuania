@@ -164,7 +164,7 @@ shapefile optional; TerraClimate required
 ## Workflow Diagram
 
 ``` mermaid
-%%{init: {'themeVariables': { 'fontSize': '11px'}}}%%
+%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%
 %%{init: {'themeVariables': { 'nodePadding': 14}}}%%
 graph TD
     subgraph Inputs
@@ -200,7 +200,7 @@ graph TD
     classDef input fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     classDef script fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
     classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;
-    classDef intermediate fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef intermediate fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     
     class R,P,E input;
     class S1,S2,S3,S4,S5,S6,S7,S8 script;

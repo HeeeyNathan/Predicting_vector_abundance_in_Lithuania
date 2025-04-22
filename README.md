@@ -123,34 +123,33 @@ Some datasets are too large for GitHub and must be downloaded separately:
 ```mermaid
 graph TD
     subgraph Input Files
-        R[Raw Data - macroinvertebrate_data.csv, ecological_ratios.csv]
-        P[Parasite Data - haemosporidian_data.csv]
-        E[External Data - Corine, TerraClimate, GeoDatabase]
+        R[\"Raw Data<br/>(macroinvertebrate_data.csv<br/>ecological_ratios.csv)\"]
+        P[\"Parasite Data<br/>(haemosporidian_data.csv)\"]
+        E[\"External Data<br/>(Corine, TerraClimate,<br/>GeoDatabase)\"]
     end
     
     subgraph Analysis Pipeline
-        R --> S1[1. Taxonomic Indices - Creates taxonomic metrics]
-        S1 --> S2[2. Corine Landcover - Adds landcover data]
+        R --> S1[1. Taxonomic Indices<br/>Creates taxonomic metrics]
+        S1 --> S2[2. Corine Landcover<br/>Adds landcover data]
         E --> S2
-        S2 --> S3[3. TerraClimate - Adds climate variables]
+        S2 --> S3[3. TerraClimate<br/>Adds climate variables]
         E --> S3
-        S3 --> S4[4. Elevation - Adds elevation data]
-        S4 --> S5[5. Model Implementation - Spatial regression models]
-        S5 --> S6[6. Model Predictions - Generate predictions]
+        S3 --> S4[4. Elevation<br/>Adds elevation data]
+        S4 --> S5[5. Model Implementation<br/>Spatial regression models]
+        S5 --> S6[6. Model Predictions<br/>Generate predictions]
         S5 --> Sites[Unique Sites File]
-        Sites --> S8[8. Covariate Panel - Create final visualizations]
+        Sites --> S8[8. Covariate Panel<br/>Create final visualizations]
         E --> S8
-        P --> S7[7. Parasite Plots - Prevalence analysis]
+        P --> S7[7. Parasite Plots<br/>Prevalence analysis]
     end
     
     subgraph Output Figures
-        S5 --> O1[Model Results - Figure 4, 6, Table S2, Figures S1-S8]
-        S6 --> O2[Predictions - Figure 5]
-        S7 --> O3[Parasite Dynamics - Figure 1]
-        S8 --> O4[Site Maps and Panels - Figure 2, 3]
+        S5 --> O1[\"Model Results<br/>(Figure 4, 6)<br/>(Table S2)<br/>(Figures S1-S8)\"]
+        S6 --> O2[\"Predictions<br/>(Figure 5)\"]
+        S7 --> O3[\"Parasite Dynamics<br/>(Figure 1)\"]
+        S8 --> O4[\"Site Maps & Panels<br/>(Figure 2, 3)\"]
     end
     
-    %% Styling
     classDef input fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     classDef script fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
     classDef output fill:#e8f5e9,stroke:#388e3c,stroke-width:2px;

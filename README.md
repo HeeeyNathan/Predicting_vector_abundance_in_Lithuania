@@ -129,18 +129,18 @@ graph TD
     end
     
     subgraph Analysis Pipeline
-        R --> S1[Taxonomic Indices - Creates taxonomic metrics]
-        S1 --> S2[Corine Landcover - Adds landcover data]
+        R --> S1[1_calculating_taxonomic_indices.R - Creates taxonomic metrics]
+        S1 --> S2[2_extracting_corine_landcover_2018.R - Adds landcover data]
         E --> S2
-        S2 --> S3[TerraClimate - Adds climate variables]
+        S2 --> S3[3_extracting_terraclimate.R - Adds climate variables]
         E --> S3
-        S3 --> S4[Elevation - Adds elevation data]
-        S4 --> S5[Model Implementation - Spatial regression models]
-        S5 --> S6[Model Predictions - Generate predictions]
+        S3 --> S4[4_extracting_elevation.R - Adds elevation data]
+        S4 --> S5[5_model_implementation.R - Spatial regression models]
+        S5 --> S6[6_model_predictions.R - Generate predictions]
         S5 --> Sites[Unique Sites File]
-        Sites --> S8[Covariate Panel - Create final visualizations]
+        Sites --> S8[7_creating_covariate_panel_plot.R - Create final visualizations]
         E --> S8
-        P --> S7[Parasite Plots - Prevalence analysis]
+        P --> S7[8_plotting_parasite_data.R - Prevalence analysis]
     end
     
     subgraph Output Figures

@@ -10,8 +10,8 @@ R-code to reproduce analysis in Baker & Palinauskas (n.d.). Ecological integrity
 This repository contains the complete analysis pipeline for analyzing Diptera taxonomic indices across different environmental conditions. The analysis consists of 8 sequential R scripts that must be run in order due to data dependencies.
 
 ## Prerequisites
-- R (version ≥ 4.0.0)
-- RStudio
+- R (version ≥ 4.4.3)
+- RStudio (version 2024.12.1)
 - Required R packages (listed in each script)
 - Access to external datasets (see Data Requirements below)
 
@@ -22,10 +22,38 @@ This repository contains the complete analysis pipeline for analyzing Diptera ta
 │   ├── 2_ecological_ratios_and_classes.csv
 │   └── 3_haemosporidian_parasite_data_long.csv
 ├── Outputs/
+│   └── 1_diptera_taxonomic_indices.csv
+│   └── 2_diptera_taxonomic_indices_wCorine2018.csv
+│   └── 3_diptera_taxonomic_indices_wCorine2018_TerraClimate.csv
+│   └── 4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv
+│   └── 5_unique_sites_for_plotting.csv
 ├── Plots/
+│   └── Baker_et.al._2024_trends.rds
+│   └── Figure1_parasite_prevalence_dynamics.RDS
+│   └── Figure1_parasite_prevalence_dynamics.png
+│   └── Figure2_Sampling_sites_wWater.png
+│   └── Figure3_covariate_panel_plot.png
+│   └── Figure4_fixed_effects.png
+│   └── Figure5_predicted_fixed_effects_without_spatial.png
+│   └── Figure6_SRF_spatial_dependency.png
+│   └── TableS2_tabluated_model_output.png
+│   └── FigureS1_distances_between_sites.png
+│   └── FigureS6_imposed_matern_correlation.png
+│   └── FigureS7_fixed _effect_model_comparisons.png
 ├── Sensitivity/
+│   └── FigureS2_sensisitivity_mesh_comparison.png
+│   └── FigureS3.1_sensitivity_DIC_values.png
+│   └── FigureS3.2_sensitivity_range_estimates.png
+│   └── FigureS3.3_sensitivity_MaternCorrelation1.png
+│   └── FigureS3.4_sensitivity_MaternCorrelation2.png
+│   └── FigureS4_sensitivity_SpatialRandomField.png
+│   └── FigureS5_sensitivity_RegressionParameters.png
+│   └── FigureS8_DensityDistribution_PCPriors.png
 ├── Additional data/ (hidden in .gitignore)
-├── Corine2018/ (user must download)
+│   └── Corine2018/ (user must download)
+│   └── Corine Landcover/
+│   └── GeoDatabase/
+│   └── TerraClimate/
 ├── Scripts/
 │   ├── 1_calculating_taxonomic_indices.R
 │   ├── 2_extracting_corine_landcover_2018.R
@@ -42,7 +70,7 @@ This repository contains the complete analysis pipeline for analyzing Diptera ta
 Some datasets are too large for GitHub and must be downloaded separately:
 
 1. **Corine Landcover 2018**
-   - Download from: [URL to be provided]
+   - Download from: https://land.copernicus.eu/en/products/corine-land-cover
    - Place in: `Corine2018/` directory
    
 2. **TerraClimate Data**
@@ -70,7 +98,7 @@ Some datasets are too large for GitHub and must be downloaded separately:
   - `Additional data/Corine Landcover/clc_legend.csv`
   - `Additional data/Corine Landcover/CLC2018_CLC2018_V2018_20_QGIS.txt`
 - **Output:** `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv`
-- **Warning:** User must download Corine Landcover data
+- **Warning:** User must download Corine Landcover data, also, I use the Corine 2012 legend "clc_legend.csv" to match names.
 
 ### Step 3: Extract TerraClimate Data
 **Script:** `3_extracting_terraclimate.R`
@@ -78,7 +106,7 @@ Some datasets are too large for GitHub and must be downloaded separately:
   - `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv`
   - `Additional data/TerraClimate/linked_terraclimate_data.RDS`
 - **Output:** `Outputs/3_diptera_taxonomic_indices_wCorine2018_TerraClimate.csv`
-- **Warning:** User must download TerraClimate data
+- **Warning:** User must download TerraClimate data - Can take a while
 
 ### Step 4: Extract Elevation Data
 **Script:** `4_extracting_elevation.R`
@@ -174,10 +202,11 @@ graph TD
 - **Memory Issues:** Some operations may require significant memory; close other applications if needed
 
 ## Citation
-[Add citation information here]
+Baker & Palinauskas (n.d.). Ecological integrity drives increased abundances of insect vectors (Culicidae, Simuliidae, Ceratopogonidae). Submitted to Parasites & Vectors
 
 ## Contact
-[Add contact information]
+Nathan Jay Baker
+nathan.baker@gamtc.lt
 
 ## License
-[Add license information]
+CC0-1.0 license

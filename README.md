@@ -149,7 +149,7 @@ Some datasets are too large for GitHub and must be downloaded separately:
 ## Workflow Diagram
 
 ```mermaid
-%%{init: {'themeVariables': { 'fontSize': '14px'}}}%%
+%%{init: {'themeVariables': { 'fontSize': '12px'}}}%%
 %%{init: {'themeVariables': { 'nodePadding': 12}}}%%
 graph TD
     subgraph Inputs

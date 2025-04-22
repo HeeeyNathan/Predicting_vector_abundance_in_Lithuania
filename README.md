@@ -150,7 +150,7 @@ Some datasets are too large for GitHub and must be downloaded separately:
 
 ```mermaid
 graph TD
-    subgraph Input Files
+    subgraph Inputs
         R[Macroinvertebrate Data - 1_raw_macroinvertebrate_data_long.csv, 2_ecological_ratios_and_classes.csv]
         P[Parasite Data - 3_haemosporidian_parasite_data_long.csv]
         E[External Data - Corine, TerraClimate, GeoDatabase]
@@ -171,7 +171,7 @@ graph TD
         P --> S7[7_plotting_parasite_data.R - Analysis of parasite data]
     end
     
-    subgraph Output Figures
+    subgraph Outputs
         S5 --> O1[Model Results - Figure 4, 6, Table S1-S2, Figures S1, S6-S7]
         S5 --> O2[Sensitivity Results - Figures S2-S5, S8]
         S6 --> O3[Predictions - Figure 5]
@@ -187,7 +187,7 @@ graph TD
     
     class R,P,E input;
     class S1,S2,S3,S4,S5,S6,S7,S8 script;
-    class O1,O2,O3,O4 output;
+    class O1,O2,O3,O4,O5 output;
     class Sites intermediate;
 ```
 

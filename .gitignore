@@ -1,6 +1,33 @@
+# R Studio files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Large datasets - too big for GitHub
 Additional\ data/
 
+# Temporary files
+*.log
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# R package installation
+renv/
+packrat/
+
+# Compiled files
+*.o
+*.so
+*.dll
+
+# Sensitive information
+*.env
+*.auth
+
+# Temporary output files during processing
+*.Rout

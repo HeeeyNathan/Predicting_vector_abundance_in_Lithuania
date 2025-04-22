@@ -149,6 +149,8 @@ Some datasets are too large for GitHub and must be downloaded separately:
 ## Workflow Diagram
 
 ```mermaid
+%%{init: {'themeVariables': { 'fontSize': '14px'}}}%%
+%%{init: {'themeVariables': { 'nodePadding': 12}}}%%
 graph TD
     subgraph Inputs
         R["Macroinvertebrate Data<br/>1_raw_macroinvertebrate_data_long.csv<br/>2_ecological_ratios_and_classes.csv"]

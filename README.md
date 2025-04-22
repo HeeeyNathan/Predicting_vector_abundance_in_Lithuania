@@ -151,32 +151,32 @@ Some datasets are too large for GitHub and must be downloaded separately:
 ```mermaid
 graph TD
     subgraph Inputs
-        R[Macroinvertebrate Data - 1_raw_macroinvertebrate_data_long.csv, 2_ecological_ratios_and_classes.csv]
-        P[Parasite Data - 3_haemosporidian_parasite_data_long.csv]
-        E[External Data - Corine, TerraClimate, GeoDatabase]
+        R["Macroinvertebrate Data<br/>1_raw_macroinvertebrate_data_long.csv<br/>2_ecological_ratios_and_classes.csv"]
+        P["Parasite Data<br/>3_haemosporidian_parasite_data_long.csv"]
+        E["External Data<br/>Corine, TerraClimate, GeoDatabase"]
     end
     
     subgraph Analysis Pipeline
-        R --> S1[1_calculating_taxonomic_indices.R - Calculates taxonomic metrics]
-        S1 --> S2[2_extracting_corine_landcover_2018.R - Adds landcover data]
+        R --> S1["1_calculating_taxonomic_indices.R<br/>Calculates taxonomic metrics"]
+        S1 --> S2["2_extracting_corine_landcover_2018.R<br/>Adds landcover data"]
         E --> S2
-        S2 --> S3[3_extracting_terraclimate.R - Adds climate variables]
+        S2 --> S3["3_extracting_terraclimate.R<br/>Adds climate variables"]
         E --> S3
-        S3 --> S4[4_extracting_elevation.R - Adds elevation data]
-        S4 --> S5[5_model_implementation.R - Spatial Bayesian regression models]
-        S5 --> S6[6_model_predictions.R - Generate model predictions]
-        S5 --> Sites[5_unique_sites_for_plotting.csv - Contains site-specific information]
-        Sites --> S8[8_creating_covariate_panel_plot.R - Create panel plot of model covariates]
+        S3 --> S4["4_extracting_elevation.R<br/>Adds elevation data"]
+        S4 --> S5["5_model_implementation.R<br/>Spatial Bayesian regression models"]
+        S5 --> S6["6_model_predictions.R<br/>Generate model predictions"]
+        S5 --> Sites["5_unique_sites_for_plotting.csv<br/>Contains site-specific information"]
+        Sites --> S8["8_creating_covariate_panel_plot.R<br/>Create panel plot of model covariates"]
         E --> S8
-        P --> S7[7_plotting_parasite_data.R - Analysis of parasite data]
+        P --> S7["7_plotting_parasite_data.R<br/>Analysis of parasite data"]
     end
     
     subgraph Outputs
-        S5 --> O1[Model Results - Figure 4, 6, Table S1-S2, Figures S1, S6-S7]
-        S5 --> O2[Sensitivity Results - Figures S2-S5, S8]
-        S6 --> O3[Predictions - Figure 5]
-        S7 --> O4[Parasite Dynamics - Figure 1]
-        S8 --> O5[Site Maps and Panels - Figure 2, 3]
+        S5 --> O1["Model Results<br/>Figure 4, 6, Table S1-S2<br/>Figures S1, S6-S7"]
+        S5 --> O2["Sensitivity Results<br/>Figures S2-S5, S8"]
+        S6 --> O3["Predictions<br/>Figure 5"]
+        S7 --> O4["Parasite Dynamics<br/>Figure 1"]
+        S8 --> O5["Site Maps and Panels<br/>Figure 2, 3"]
     end
     
     %% Styling

@@ -104,12 +104,13 @@ separately:
 
 ### Step 2: Extract Corine Landcover Data
 
-**Script:** `2_extracting_corine_landcover_2018.R` - **Input:** -
-`Outputs/1_diptera_taxonomic_indices.csv` -
-`Corine2018/u2018_clc2018_v2020_20u1_raster100m/DATA/U2018_CLC2018_V2020_20u1.tif` -
-`Additional data/Corine Landcover/clc_legend.csv` -
-`Additional data/Corine Landcover/CLC2018_CLC2018_V2018_20_QGIS.txt` -
-**Output:** `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv` -
+**Script:** `2_extracting_corine_landcover_2018.R` 
+**Input:** 
+`Outputs/1_diptera_taxonomic_indices.csv`
+`Corine2018/u2018_clc2018_v2020_20u1_raster100m/DATA/U2018_CLC2018_V2020_20u1.tif`
+`Additional data/Corine Landcover/clc_legend.csv`
+`Additional data/Corine Landcover/CLC2018_CLC2018_V2018_20_QGIS.txt`
+**Output:** `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv`
 **Warning:** User must download Corine Landcover data, also, I use the
 Corine 2012 legend "clc_legend.csv" to match names.
 

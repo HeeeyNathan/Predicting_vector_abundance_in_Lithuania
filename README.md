@@ -197,12 +197,12 @@ graph TD
         Sites --> S8["8_creating_covariate_panel_plot.R<br/>Create panel plot of model covariates"]
         E --> S8
         P --> S7["7_plotting_parasite_data.R<br/>Analysis of parasite data"]
-        P --> map_preds["6_prediction_data.csv<br/>Contains data used for predicting<br/>vectors at unmonitored sites"]
-        E --> map_preds
-        S2 --> map_preds
-        S3 --> map_preds
-        S4 --> map_preds
-        map_preds --> S9["9_model_predictions_at_specific_point.R<br/>Predicting unmonitored<br/>sites using model"]
+        P --> Predictions["6_prediction_data.csv<br/>Contains data used for predicting<br/>vectors at unmonitored sites"]
+        E --> Predictions
+        S2 --> Predictions
+        S3 --> Predictions
+        S4 --> Predictions
+        Predictions --> S9["9_model_predictions_at_specific_point.R<br/>Predicting unmonitored<br/>sites using model"]
         S5 --> S9
     end
     
@@ -222,9 +222,9 @@ graph TD
     classDef intermediate fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
     
     class R,P,E input;
-    class S1,S2,S3,S4,S5,S6,S7,S8 script;
-    class O1,O2,O3,O4,O5 output;
-    class Sites,map_preds intermediate;
+    class S1,S2,S3,S4,S5,S6,S7,S8,S9 script;
+    class O1,O2,O3,O4,O5,O6 output;
+    class Sites,Predictions intermediate;
 ```
 
 ## Running the Analysis

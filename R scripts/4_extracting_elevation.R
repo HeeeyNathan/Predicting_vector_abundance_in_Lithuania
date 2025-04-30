@@ -127,6 +127,66 @@ df <- df |>
 # save output
 write.csv(df, "Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv", row.names = F)
 
+
+#### Predcition data #####
+
+# Data for prediction using our model. We will use the coordinates from a site 16.5km from Rybachy, very near the Lithuanian border
+# Rybachy on the Curonian Lagoon: 55.153730, 20.857780 Decimal degree; 490937.22, 6111907.79 UTM
+# Our point is at: 55.285238, 20.970616 Decimal degree; 498133.71, 6126533.56 UTM
+# We use km instead of meters so we need to divide by 1000. The euclidean distance between the sites is 16.41 km
+
+predict_data <- read.csv("Outputs/6_prediction_data.csv") |>
+  mutate(site_id        = as.factor(site_id),
+         sample_id      = as.factor(sample_id),
+         waterbody_type = as.factor(waterbody_type),
+         date           = as.Date(date, format = "%Y-%m-%d"))
+
+# create dataframe with unique sites and coordinates
+xy <- predict_data |>
+  dplyr::select(site_id, latitude, longitude) |>
+  distinct(site_id, .keep_all = TRUE) # Keeps the first occurrence of each site_id
+
+# Split the dataset into batches (e.g., 50 coordinates per batch)
+batch_size <- 2
+batches <- split(xy, ceiling(seq_along(xy$latitude) / batch_size))
+
+# Function to fetch elevation for a batch
+get_elevation_batch <- function(batch) {
+  google_elevation(data.frame(lat = batch$latitude, lon = batch$longitude), key = "YOUR KEY HERE") # <----- add your own google api key here
+}
+
+# Apply the function to each batch
+elevation_results <- lapply(batches, get_elevation_batch)
+
+# Combine all results into a single dataframe
+# Extract the 'results' and reset row names for each batch
+elevation_data <- bind_rows(
+  lapply(seq_along(elevation_results), function(i) {
+    # Extract 'results' and add corresponding site_id
+    batch <- elevation_results[[i]]$results
+    batch$site_id <- xy$site_id[(i - 1) * length(batch$elevation) + seq_along(batch$elevation)]
+    as.data.frame(batch)
+  })
+)
+
+# Merge elevation data back with the original dataframe
+xy$elevation <- elevation_data$elevation
+
+# rename columns for ease
+xy <- xy |>
+  rename(
+    x = longitude,
+    y = latitude,
+  )
+
+# Join elevation data to main dataset
+predict_data <- predict_data |>
+  left_join(xy, by = "site_id") |>
+  dplyr::select(-x, -y)
+
+# save output
+write.csv(predict_data, "Outputs/6_prediction_data.csv", row.names = F)
+
 ###############################################################################################################
 # CLEAN UP WORKSPACE
 rm(list = ls())       # Remove all objects from environment

@@ -1,4 +1,4 @@
-locality,latitute,longitude,sample_id,day,month,year,period,date,ring_id,bird_species,gender,age,microscopy,lineage_molecular,lineage_molecular_clean,infection,infection_binary,infection_status,Haemoproteus,Leucocytozoon,Plasmodium
+locality,latitude,longitude,sample_id,day,month,year,period,date,ring_id,bird_species,gender,age,microscopy,lineage_molecular,lineage_molecular_clean,infection,infection_binary,infection_status,Haemoproteus,Leucocytozoon,Plasmodium
 Curonian_Spit_Rybachy,55.15373,20.85778,10355,17,7,2003,old,17.7.2003,,Parus_caeruleus,,juv,Haemoproteus_majoris,PARUS1,PARUS1,Haemoproteus_sp.,1,single,1,NA,NA
 Curonian_Spit_Rybachy,55.15373,20.85778,10392,17,7,2003,old,17.7.2003,,Parus_caeruleus,,juv,negative,negative,negative,negative,0,negative,NA,NA,NA
 Curonian_Spit_Rybachy,55.15373,20.85778,10395,17,7,2003,old,17.7.2003,,Parus_caeruleus,,juv,negative,negative,negative,negative,0,negative,NA,NA,NA

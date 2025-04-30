@@ -37,6 +37,7 @@ due to data dependencies.
 │   └── 3_diptera_taxonomic_indices_wCorine2018_TerraClimate.csv
 │   └── 4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv
 │   └── 5_unique_sites_for_plotting.csv
+│   └── 6_prediction_data.csv
 ├── Plots/
 │   └── Baker_et.al._2024_trends.rds
 │   └── Figure1_parasite_prevalence_dynamics.RDS
@@ -46,6 +47,7 @@ due to data dependencies.
 │   └── Figure4_fixed_effects.png
 │   └── Figure5_predicted_fixed_effects_without_spatial.png
 │   └── Figure6_SRF_spatial_dependency.png
+│   └── Figure7_predicted_vector_abundance.png
 │   └── TableS2_tabluated_model_output.png
 │   └── FigureS1_distances_between_sites.png
 │   └── FigureS6_imposed_matern_correlation.png
@@ -64,7 +66,7 @@ due to data dependencies.
 │   └── Corine Landcover/
 │   └── GeoDatabase/
 │   └── TerraClimate/
-├── Scripts/
+├── R Scripts/
 │   ├── 1_calculating_taxonomic_indices.R
 │   ├── 2_extracting_corine_landcover_2018.R
 │   ├── 3_extracting_terraclimate.R
@@ -73,6 +75,7 @@ due to data dependencies.
 │   ├── 6_model_predictions.R
 │   ├── 7_plotting_parasite_data.R
 │   └── 8_creating_covariate_panel_plot.R
+│   └── 9_model_predictions_at_specific_point.R
 └── README.md
 ```
 
@@ -109,7 +112,8 @@ separately:
 `Corine2018/u2018_clc2018_v2020_20u1_raster100m/DATA/U2018_CLC2018_V2020_20u1.tif` -
 `Additional data/Corine Landcover/clc_legend.csv` -
 `Additional data/Corine Landcover/CLC2018_CLC2018_V2018_20_QGIS.txt` -
-**Output:** `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv` -
+**Output:** `Outputs/2_diptera_taxonomic_indices_wCorine2018.csv` - 
+`6_prediction_data.csv` -
 **Warning:** User must download Corine Landcover data, also, I use the
 Corine 2012 legend "clc_legend.csv" to match names.
 
@@ -120,6 +124,7 @@ Corine 2012 legend "clc_legend.csv" to match names.
 `Additional data/TerraClimate/linked_terraclimate_data.RDS` -
 **Output:**
 `Outputs/3_diptera_taxonomic_indices_wCorine2018_TerraClimate.csv` -
+`6_prediction_data.csv` -
 **Warning:** User must download TerraClimate data - Can take a while
 
 ### Step 4: Extract Elevation Data
@@ -127,7 +132,8 @@ Corine 2012 legend "clc_legend.csv" to match names.
 **Script:** `4_extracting_elevation.R` - **Input:**
 `Outputs/3_diptera_taxonomic_indices_wCorine2018_TerraClimate.csv` -
 **Output:**
-`Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv`
+`Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv` -
+`6_prediction_data.csv`
 
 ### Step 5: Implement Model
 
@@ -161,6 +167,11 @@ TerraClimate data - **Output:** -
 `Plots/Figure3_covariate_panel_plot.png` - **Warning:** Lithuanian river
 shapefile optional; TerraClimate required
 
+**Script:** `9_model_predictions_at_specific_point.R` - **Input:** -
+`Outputs/6_prediction_data.csv` -
+**Output:** - Main plots: `Figure7` - 
+**Warning:** If `rgeoboundaries` fails, use `rnaturalearth` package
+
 ## Workflow Diagram
 
 ``` mermaid
@@ -186,6 +197,13 @@ graph TD
         Sites --> S8["8_creating_covariate_panel_plot.R<br/>Create panel plot of model covariates"]
         E --> S8
         P --> S7["7_plotting_parasite_data.R<br/>Analysis of parasite data"]
+        P --> Predictions["6_prediction_data.csv<br/>Contains data used for predicting data at unmonitored sites"]
+        E --> Predictions
+        S2 --> Predictions
+        S3 --> Predictions
+        S4 --> Predictions
+        Predictions --> S9["9_model_predictions_at_specific_point.R<br/>Predicting unmonitored sites using model"]
+        S5 --> S9
     end
     
     subgraph Outputs
@@ -194,6 +212,7 @@ graph TD
         S6 --> O3["Predictions<br/>Figure 5"]
         S7 --> O4["Parasite Dynamics<br/>Figure 1"]
         S8 --> O5["Site Maps and Panels<br/>Figure 2, 3"]
+        S9 --> O6["Predicted vector abundance (Curonian Spit)<br/>Figure 7"]
     end
     
     %% Styling

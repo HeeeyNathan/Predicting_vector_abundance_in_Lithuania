@@ -911,4 +911,4 @@ combined_plot <- (p1 + p3) +
   plot_annotation(tag_levels = 'A')
 combined_plot
 
-ggsave("Plots/Figure8_predicted_vector_abundance.png", plot = combined_plot, width = 20, height = 10, units = "in", dpi = 300, device = "png", bg = "white")
+ggsave("Plots/Figure7_predicted_vector_abundance.png", plot = combined_plot, width = 20, height = 10, units = "in", dpi = 300, device = "png", bg = "white")

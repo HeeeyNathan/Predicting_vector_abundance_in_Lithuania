@@ -197,12 +197,12 @@ graph TD
         Sites --> S8["8_creating_covariate_panel_plot.R<br/>Create panel plot of model covariates"]
         E --> S8
         P --> S7["7_plotting_parasite_data.R<br/>Analysis of parasite data"]
-        P --> Predictions["6_prediction_data.csv<br/>Contains data used for predicting data at unmonitored sites"]
+        P --> Predictions["6_prediction_data.csv<br/>Contains data used for predicting<br/>vectors at unmonitored sites"]
         E --> Predictions
         S2 --> Predictions
         S3 --> Predictions
         S4 --> Predictions
-        Predictions --> S9["9_model_predictions_at_specific_point.R<br/>Predicting unmonitored sites using model"]
+        Predictions --> S9["9_model_predictions_at_specific_point.R<br/>Predicting unmonitored<br/>sites using model"]
         S5 --> S9
     end
     
@@ -212,7 +212,7 @@ graph TD
         S6 --> O3["Predictions<br/>Figure 5"]
         S7 --> O4["Parasite Dynamics<br/>Figure 1"]
         S8 --> O5["Site Maps and Panels<br/>Figure 2, 3"]
-        S9 --> O6["Predicted vector abundance (Curonian Spit)<br/>Figure 7"]
+        S9 --> O6["Predicted vector abundance<br/>(Curonian Spit)<br/>Figure 7"]
     end
     
     %% Styling

@@ -224,7 +224,7 @@ graph TD
     class R,P,E input;
     class S1,S2,S3,S4,S5,S6,S7,S8 script;
     class O1,O2,O3,O4,O5 output;
-    class Sites intermediate;
+    class Sites,Predictions intermediate;
 ```
 
 ## Running the Analysis

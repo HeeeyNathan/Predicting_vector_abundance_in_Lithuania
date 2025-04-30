@@ -231,7 +231,7 @@ graph TD
 
 1.  Clone this repository
 2.  Download required external datasets (see Data Requirements)
-3.  Run scripts sequentially from 1 to 8
+3.  Run scripts sequentially from 1 to 9
 4.  Output plots and files will be generated in respective directories
 
 ## Troubleshooting

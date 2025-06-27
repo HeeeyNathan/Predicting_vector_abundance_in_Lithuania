@@ -40,13 +40,13 @@ due to data dependencies.
 │   └── 6_prediction_data.csv
 ├── Plots/
 │   └── Baker_et.al._2024_trends.rds
-│   └── Figure1_parasite_prevalence_dynamics.RDS
-│   └── Figure1_parasite_prevalence_dynamics.png
-│   └── Figure2_Sampling_sites_wWater.png
-│   └── Figure3_covariate_panel_plot.png
-│   └── Figure4_fixed_effects.png
-│   └── Figure5_predicted_fixed_effects_without_spatial.png
-│   └── Figure6_SRF_spatial_dependency.png
+│   └── Figure1_Sampling_sites_wWater.png
+│   └── Figure2_covariate_panel_plot.png
+│   └── Figure3_fixed_effects.png
+│   └── Figure4_predicted_fixed_effects_without_spatial.png
+│   └── Figure5_SRF_spatial_dependency.png
+│   └── Figure6_parasite_prevalence_dynamics.RDS
+│   └── Figure6_parasite_prevalence_dynamics.png
 │   └── Figure7_predicted_vector_abundance.png
 │   └── TableS2_tabluated_model_output.png
 │   └── FigureS1_distances_between_sites.png
@@ -140,7 +140,7 @@ Corine 2012 legend "clc_legend.csv" to match names.
 **Script:** `5_model_implementation.R` - **Input:**
 `Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv` -
 **Output:** - `Outputs/5_unique_sites_for_plotting.csv` - Main plots:
-`Figure4`, `Figure6` - Supplement plots: `TableS2`, `FigureS1`,
+`Figure3`, `Figure5` - Supplement plots: `TableS2`, `FigureS1`,
 `FigureS6`, `FigureS7` - Sensitivity plots: Multiple figures (S2-S8) -
 **Warning:** If `rgeoboundaries` fails, use `rnaturalearth` package
 
@@ -148,14 +148,14 @@ Corine 2012 legend "clc_legend.csv" to match names.
 
 **Script:** `6_model_predictions.R` - **Input:**
 `Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv` -
-**Output:** `Plots/Figure5_predicted_fixed_effects_without_spatial.png`
+**Output:** `Plots/Figure4_predicted_fixed_effects_without_spatial.png`
 
 ### Step 7: Plot Parasite Data
 
 **Script:** `7_plotting_parasite_data.R` - **Input:**
 `Data/3_haemosporidian_parasite_data_long.csv` - **Output:** -
-`Plots/Figure1_parasite_prevalence_dynamics.png` -
-`Plots/Figure1_parasite_prevalence_dynamics.RDS`
+`Plots/Figure6_parasite_prevalence_dynamics.png` -
+`Plots/Figure6_parasite_prevalence_dynamics.RDS`
 
 ### Step 8: Create Covariate Panel Plot
 
@@ -163,8 +163,8 @@ Corine 2012 legend "clc_legend.csv" to match names.
 `Outputs/5_unique_sites_for_plotting.csv` -
 `Additional data/GeoDatabase/UETK_2024-05-02.gdb` - Corine and
 TerraClimate data - **Output:** -
-`Plots/Figure2_Sampling_sites_wWater.png` -
-`Plots/Figure3_covariate_panel_plot.png` - **Warning:** Lithuanian river
+`Plots/Figure1_Sampling_sites_wWater.png` -
+`Plots/Figure2_covariate_panel_plot.png` - **Warning:** Lithuanian river
 shapefile optional; TerraClimate required
 
 **Script:** `9_model_predictions_at_specific_point.R` - **Input:** -

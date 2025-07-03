@@ -115,7 +115,7 @@ sampling_sites <- sampling_sites +
     width_hint = 0.25
   )
 
-ggsave("Plots/Figure2_Sampling_sites_wWater.png", width = 10, height = 8, dpi = 300, bg = "white")
+ggsave("Plots/Figure1_Sampling_sites_wWater.png", width = 10, height = 8, dpi = 300, bg = "white")
 
 #==================== Average EQC of sampling sites ===================
 # Define WFD colors for EQC classes
@@ -124,6 +124,10 @@ wfd_colors <- c("High" = "#0000FF",     # Pure blue
                 "Moderate" = "#FFD700", # Gold
                 "Poor" = "#FF6600",     # Darker orange
                 "Bad" = "#FF0000")      # Red
+
+# Convert to factor with desired order
+Unique_sites$avg_eqc_cat <- factor(Unique_sites$avg_eqc_cat,
+                                   levels = c("Bad", "Poor", "Moderate", "Good", "High"))
 
 # Create the map
 average_eqc <- ggplot() +
@@ -799,7 +803,9 @@ combined_plot <- (
   xlab("Longitude") &
   ylab("Latitude")
 
-ggsave("Plots/Figure3_covariate_panel_plot.png", plot = combined_plot, width = 10.5, height = 14, dpi = 300)
+combined_plot
+
+ggsave("Plots/Figure2_covariate_panel_plot.png", plot = combined_plot, width = 10.5, height = 14, dpi = 300)
 
 ###############################################################################################################
 # CLEAN UP WORKSPACE

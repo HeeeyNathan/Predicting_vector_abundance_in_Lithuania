@@ -277,8 +277,8 @@ combined_plot <- p1 + p2 +
   plot_annotation(tag_levels = 'A') # Add A and B labels
 combined_plot
 
-ggsave("Plots/Figure1_parasite_prevalence_dynamics.png", plot = combined_plot, width = 20, height = 10, units = "in", dpi = 300, device = "png", bg = "white")
-saveRDS(combined_plot, "Plots/Figure1_parasite_prevalence_dynamics.RDS")
+ggsave("Plots/Figure6_parasite_prevalence_dynamics.png", plot = combined_plot, width = 20, height = 10, units = "in", dpi = 300, device = "png", bg = "white")
+saveRDS(combined_plot, "Plots/Figure6_parasite_prevalence_dynamics.RDS")
 
 ###############################################################################################################
 # CLEAN UP WORKSPACE

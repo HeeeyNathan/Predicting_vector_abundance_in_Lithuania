@@ -119,8 +119,6 @@ My_theme <- theme(panel.background = element_blank(),
                   panel.border = element_rect(fill = NA, linewidth = 1.25),
                   strip.background = element_rect(fill = "white",
                                                   color = "white", linewidth = 1.25),
-                  # legend.position = "right",
-                  # axis.text.x = element_text(angle = 45, hjust = 1),
                   text = element_text(size = 16))
 
 # Section 4: House keeping----
@@ -1018,12 +1016,48 @@ P4_combined <- ggplot() +
     axis.ticks = element_line(color = "black")
   )
 
-P6_combined <- (P1_combined + P4_combined + plot_layout(axes = "collect_y")) /
-               (P3_combined + P2_combined + plot_layout(axes = "collect_y")) +
-               plot_annotation(tag_levels = 'A')  # This adds a, b, c labels
+
+#====== Create add_plot_label function with top-right positioning ======
+add_plot_label <- function(plot, label) {
+  plot +
+    annotate(
+      "text",
+      x = Inf,
+      y = Inf,
+      label = label,
+      hjust = 2.5,
+      vjust = 1.5,
+      size = 7,
+      fontface = "bold"
+    )
+}
+
+# Create list of plots with labels
+plots_list <- list(
+  # Plot A (top-left): EQR plot
+  add_plot_label(P1_combined, "A"),
+  # Plot B (top-right): Elevation plot
+  add_plot_label(P4_combined, "B"),
+  # Plot C (bottom-left): Temperature plot
+  add_plot_label(P3_combined, "C"),
+  # Plot D (bottom-right): Precipitation plot
+  add_plot_label(P2_combined, "D")
+)
+
+# Create layout using patchwork
+P6_combined <- (
+  plots_list[[1]] + plots_list[[2]] +
+  plots_list[[3]] + plots_list[[4]]
+) +
+  plot_layout(
+    ncol = 2,
+    axes = "collect_y"
+  )
+
+P6_combined
 
 # Save the plot
-ggsave("Plots/Figure5_predicted_fixed_effects_without_spatial.png", width = 10, height = 12, bg = "white", dpi = 300)
+ggsave("Plots/Figure4_predicted_fixed_effects_without_spatial.png", width = 10, height = 12, bg = "white", dpi = 300)
 
 ###############################################################################################################
 # CLEAN UP WORKSPACE

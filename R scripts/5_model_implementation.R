@@ -1006,7 +1006,7 @@ head(Loc)
 
 #' Distances between sites (i.e. trees).
 D <- dist(Loc)
-png("Plots/FigureS1_distances_between_sites.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
+png("Plots/FigureS2_distances_between_sites.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
 par(mfrow = c(1,1), mar = c(5,5,2,2))
 hist(D,
      freq = TRUE,
@@ -1356,7 +1356,7 @@ d.vec <- seq(0, max(D), length = 100)
 Cor.M <- (Kappa * d.vec) * besselK(Kappa * d.vec, 1)
 Cor.M[1] <- 1
 
-png("Plots/FigureS6_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
+png("Plots/FigureS10_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
 #' Which we plot here:
 par(mfrow=c(1,1), mar = c(5,5,2,2))
 plot(x = d.vec,
@@ -1370,9 +1370,9 @@ plot(x = d.vec,
 abline(h = 0.8, lty = 2, col = 2)
 abline(h = 0.5, lty = 2, col = 2)
 abline(h = 0.1, lty = 2, col = 2)
-abline(v = 5.5, lty = 2, col = 4)
-abline(v = 12.5, lty = 2, col = 4)
-abline(v = 32, lty = 2, col = 4)
+# abline(v = 5.5, lty = 2, col = 4)
+# abline(v = 12.5, lty = 2, col = 4)
+# abline(v = 32, lty = 2, col = 4)
 dev.off()
 
 #' Define strong correlation as correlation between 1 - 0.8.
@@ -1538,7 +1538,7 @@ ggplot() +
     axis.ticks = element_line(color = "black")
   )
 
-ggsave("Plots/Figure6_SRF_spatial_dependency.png", width = 10, height = 8, units = "in", bg = "white", dpi = 300)
+ggsave("Plots/Figure5_SRF_spatial_dependency.png", width = 10, height = 8, units = "in", bg = "white", dpi = 300)
 #' This is quite clear spatial correlation.
 
 
@@ -1624,7 +1624,7 @@ ggplot(BetasI1_df, aes(x = Mean, y = Covariate)) +
   # Add this theme element to render HTML in text
   theme(axis.text.y = ggtext::element_markdown())
 
-ggsave("Plots/Figure4_fixed_effects.png", width = 10, height = 10, bg = "white", dpi = 300)
+ggsave("Plots/Figure3_fixed_effects.png", width = 10, height = 8, bg = "white", dpi = 300)
 
 # Create a simplified table of model output
 result_table <- create_simple_inla_table(I1)
@@ -2904,7 +2904,7 @@ MyNames <- c("NB GLM",
 MyCompareBetasofModels(AllModels = list(Out2, Out2.mesh1, Out2.mesh2, Out2.mesh2repl, Out2.mesh2ar1),
                        ModelNames = MyNames)
 
-ggsave("Plots/FigureS7_fixed _effect_model_comparisons.png", width = 10, height = 10, units = "in", bg = "white", dpi = 300)
+ggsave("Plots/FigureS1_fixed _effect_model_comparisons.png", width = 10, height = 10, units = "in", bg = "white", dpi = 300)
 
 #' There are some differences between the model without and with spatial dependency.
 #' There are no major differences between the spatial models.
@@ -3057,25 +3057,28 @@ plotList <- list()
 for (i in 1:NumberOfMeshes) {
   mesh <- MeshList[[i]]
   fm_crs(mesh) <- st_crs(CroppedLithuania_UTM)
-
   p <- ggplot() +
     theme_minimal() +
+    theme(
+      plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+    ) +
     labs(title = paste("Mesh ", i, " (",MeshSizes[i],")", sep = "")) +
     geom_fm(data = mesh) +
     #geom_point(data = df, aes(x = Xkm, y = Ykm), alpha = 0.5) +
     geom_sf(data = CroppedLithuania_UTM, fill = "transparent", col = "red")
-
   plotList[[i]] <- p
 }
 
-#' And plot all meshes.
+#' And plot all meshes with shared axes.
 CombinedPlot <- plot_grid(plotlist = plotList,
-                          ncol = 3)
+                          ncol = 3,
+                          align = "hv",           # Align both horizontally and vertically
+                          axis = "tblr")          # Share top, bottom, left, right axes
 CombinedPlot
 
 
 ggsave(CombinedPlot,
-       filename = "Sensitivity/FigureS2_sensisitivity_mesh_comparison.png",
+       filename = "Sensitivity/FigureS3_sensisitivity_mesh_comparison.png",
        width = 14,
        height = 7,
        bg = "white",
@@ -3222,7 +3225,7 @@ dicMatrix <- matrix(dicValues,
 rownames(dicMatrix) <- paste("w", MeshSizes, sep = "=")
 colnames(dicMatrix) <- paste(" P(Range<", RangePriorValues, ")=0.5", sep = "")
 dicMatrix
-
+range(dicMatrix)
 
 #' w=2871:
 #'  -This is the mesh with 2871 ws.
@@ -3255,14 +3258,15 @@ ggplot(dicLong,
   scale_fill_gradient(low = "#21918c", high = "#440154") +
   theme_minimal() +
   theme(text = element_text(size = 15),
-        axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) +
+        axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5)) +
   labs(title = "DIC Values Heatmap",
        x = "Prior value for range",
        y = "Mesh resolution",
        fill = "DIC",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS3.1_sensitivity_DIC_values.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS4_sensitivity_DIC_values.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' This is what we used in the actual analysis:
 mesh1$n
@@ -3307,6 +3311,7 @@ for (i in 1:NumberOfMeshes) {
 rownames(EstimatedRanges) <- paste("w=", MeshSizes, sep = "")
 colnames(EstimatedRanges) <- paste("P(Range<", RangePriorValues, ")=0.5", sep = "")
 EstimatedRanges
+range(EstimatedRanges)
 
 
 #' Visualise the results
@@ -3327,14 +3332,15 @@ ggplot(EstimatedRangesLong,
   scale_fill_gradient(low = "#21918c", high = "#440154") +
   theme_minimal() +
   theme(text = element_text(size = 15),
-        axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) +
+        axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+        plot.title = element_text(hjust = 0.5)) +
   labs(title = "Posterior mean values of the range",
        x = "Prior Range Value",
        y = "Mesh Resolution",
        fill = "P(Range < ..) = 0.5",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS3.2_sensitivity_range_estimates.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS5_sensitivity_range_estimates.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Conclusions:
 #' -For any mesh resolution, choice of prior is influential, no matter the coarseness of the mesh.
@@ -3391,6 +3397,7 @@ ggplot(MyData,
   geom_line() +
   facet_wrap( ~ MeshName, ncol = 3) +
   theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlim(0,150)+
   labs(title = "Matern correlation",
        x = "Distance",
@@ -3398,7 +3405,7 @@ ggplot(MyData,
        color = "Prior",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS3.3_sensitivity_MaternCorrelation1.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS6_sensitivity_MaternCorrelation1.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' This is in principle the same information as we discussed for the posterior mean values of the range. Just go back one graph.
 #'  -For finer meshes, the ranges differences are not so different, and the lines are smoother. But not by much.
@@ -3415,6 +3422,7 @@ ggplot(MyData,
   geom_line() +
   facet_wrap( ~ PriorRange, ncol = 3) +
   theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
   xlim(0,150)+
   labs(title = "Matern correlation",
        x = "Distance",
@@ -3422,7 +3430,7 @@ ggplot(MyData,
        color = "mesh resolution",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS3.4_sensitivity_MaternCorrelation2.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS7_sensitivity_MaternCorrelation2.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Same as in the previous two pictures.
 #'  -No so much difference in the Matern correlation for different meshes.
@@ -3435,9 +3443,9 @@ ggsave("Sensitivity/FigureS3.4_sensitivity_MaternCorrelation2.png", width = 10, 
 #' for different mesh configurations and priors for the range.
 
 #' Pick one of the following covariates:
-ThisX <- "eqr.std"
+# ThisX <- "eqr.std"
 # ThisX <- "ppt.std"
-# ThisX <- "tmin.std"
+ThisX <- "tmin.std"
 # ThisX <- "ws.std"
 # ThisX <- "elevation.std"
 # ThisX <- "agriculture.std"
@@ -3485,7 +3493,7 @@ MyData$MeshName   <- factor(MyData$MeshName,
 
 
 #'  Plot the results.
-ggplot(data = MyData,
+tmin <- ggplot(data = MyData,
        aes(x = MeshName,
            y = beta.pm,
            ymax = SeUp,
@@ -3514,7 +3522,7 @@ combined_plot_sensitivity <- eqr + elevation + ppt + tmin +
 combined_plot_sensitivity
 
 
-ggsave("Sensitivity/FigureS5_sensitivity_RegressionParameters.png", width = 20, height = 20, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS9_sensitivity_RegressionParameters.png", width = 20, height = 20, dpi = 300, bg = "white")
 
 #' Conclusions:
 #'  - it seems range prior does not have much influence on the regression parameters. The mesh size does not seem to have much influence either.
@@ -3615,13 +3623,14 @@ ggplot(data = CroppedLithuania_UTM) +
   theme(axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.x = element_blank(),
-        axis.ticks.y = element_blank())    +
+        axis.ticks.y = element_blank(),
+        plot.title = element_text(hjust = 0.5))    +
   guides(fill = guide_legend(title = NULL)) +
   labs(title = "Spatial random field",
        caption = "Sigma_u = c(2, 0.05)")  +
   facet_grid(PriorRange ~ MeshName)
 
-ggsave("Sensitivity/FigureS4_sensitivity_SpatialRandomField.png", width = 10, height = 8, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS8_sensitivity_SpatialRandomField.png", width = 10, height = 8, dpi = 300, bg = "white")
 
 #' Interpretations
 #'   -All panels look very similar. This is good news.
@@ -3749,7 +3758,7 @@ combined_plot <- p1 + p2 +
 # Display the combined plot
 combined_plot
 
-ggsave("Sensitivity/FigureS8_DensityDistribution_PCPriors.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS11_DensityDistribution_PCPriors.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Section 19: Clean up----
 library(pacman)

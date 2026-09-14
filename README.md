@@ -4,9 +4,9 @@ Using hierarchical spatial-temporal models implemented in R-INLA to
 understand and predict patterns of insect vector abundance in Lithuanian
 lakes and rivers
 
-R-code to reproduce analysis in Baker & Palinauskas (n.d.). Ecological
-integrity drives increased abundances of insect vectors (Culicidae,
-Simuliidae, Ceratopogonidae). Submitted to Parasites & Vectors
+R-code to reproduce analysis in Baker & Palinauskas (n.d.). Spatially 
+heterogenous distributions of dipteran abundances identify priority areas for 
+haemosporidian parasite surveillance. Submitted to Scientific Reports
 
 # Diptera Taxonomic Analysis Project
 
@@ -245,9 +245,9 @@ graph TD
 
 ## Citation
 
-Baker & Palinauskas (n.d.). Ecological integrity drives increased
-abundances of insect vectors (Culicidae, Simuliidae, Ceratopogonidae).
-Submitted to Parasites & Vectors
+Baker & Palinauskas (n.d.). Spatially heterogenous distributions of dipteran 
+abundances identify priority areas for haemosporidian parasite surveillance.
+Submitted to Scientific Reports
 
 ## Contact
 

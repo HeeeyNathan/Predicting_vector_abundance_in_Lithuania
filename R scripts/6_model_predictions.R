@@ -59,9 +59,8 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
                                         labels = c("Bad", "Poor", "Moderate", "Good", "High"),
                                         ordered = F), # make EQC a factor
          waterbody_name   = factor(waterbody_name), # make waterbody_name a factor
-         waterbody_type   = factor(waterbody_type, levels = c("lake", "river"),
-                                                   labels = c("Lake", "River"),
-                                                   ordered = T), # make waterbody_type a factor
+         waterbody_type   = factor(waterbody_type, levels = c("river", "lake"),
+                                                   labels = c("River", "Lake")), # unordered factor with River as reference level, so the model estimates Lakes relative to Rivers
          date             = as.Date(date, format = "%Y-%m-%d"), # make the dates dates
          doy              = yday(date)) |> # calculate sampling day of year (doy)
   dplyr::rename(agriculture      = agricultural_areas,
@@ -70,7 +69,7 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
          water            = water_bodies,
          wetlands         = wetlands) |>
   dplyr::select(-c(observation_period, sampling_events)) |> # removes unnecessary columns
-  arrange(desc(waterbody_type), site_id, year) |>  # order the data.frame
+  arrange(waterbody_type, site_id, year) |>  # order the data.frame
   as.data.frame() # Convert tibble to dataframe because some older code does not recognize tibble
 
 #' What do we have?
@@ -145,7 +144,7 @@ df <- df |>
     sampling_events = n_distinct(year)
   ) |>
   ungroup() |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 
@@ -157,7 +156,7 @@ df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 #'  Keep sites with less than 1 sampling events throughout the observation period
 df <- df |>
   filter(sampling_events >= 1) |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 #* Subsection 4.2: Missing values----
 
@@ -410,7 +409,7 @@ colnames(X)
 #' This is a model with spatial dependency, based on mesh 1.
 f1 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                      f(w, model = spde1)
 
 #* Subsection 7.8: Execute the INLA models----
@@ -445,7 +444,7 @@ MyDataCombined1$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined1$artificial.std  <- mean(df$artificial.std)
 MyDataCombined1$natural.std     <- mean(df$natural.std)
 MyDataCombined1$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined1$waterbody_type  <- factor(levels(df$waterbody_type)[1], levels = levels(df$waterbody_type)) # For waterbody_type, create a proper factor with the same levels as in the original data
+MyDataCombined1$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type)) # For waterbody_type, create a proper factor with the same levels as in the original data
 
 # PPT
 MyDataCombined2$eqr.std         <- mean(df$eqr.std)
@@ -456,7 +455,7 @@ MyDataCombined2$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined2$artificial.std  <- mean(df$artificial.std)
 MyDataCombined2$natural.std     <- mean(df$natural.std)
 MyDataCombined2$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined2$waterbody_type  <- factor(levels(df$waterbody_type)[1], levels = levels(df$waterbody_type))
+MyDataCombined2$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
 
 # TMIN
 MyDataCombined3$eqr.std         <- mean(df$eqr.std)
@@ -467,7 +466,7 @@ MyDataCombined3$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined3$artificial.std  <- mean(df$artificial.std)
 MyDataCombined3$natural.std     <- mean(df$natural.std)
 MyDataCombined3$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined3$waterbody_type  <- factor(levels(df$waterbody_type)[1], levels = levels(df$waterbody_type))
+MyDataCombined3$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
 
 # ELEVATION
 MyDataCombined4$eqr.std         <- mean(df$eqr.std)
@@ -478,7 +477,7 @@ MyDataCombined4$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined4$artificial.std  <- mean(df$artificial.std)
 MyDataCombined4$natural.std     <- mean(df$natural.std)
 MyDataCombined4$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined4$waterbody_type  <- factor(levels(df$waterbody_type)[1], levels = levels(df$waterbody_type))
+MyDataCombined4$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
 
 # Make the X matrix using model.matrix()
 XpCombined1 <- model.matrix(~ eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
@@ -648,6 +647,9 @@ My_theme <- theme(panel.background = element_blank(),
                                                  color = "white", linewidth = 1.25),
                   text = element_text(size = 16))
 
+# Waterbody type colours matching Figure 1 (named, so they do not depend on factor level order)
+waterbody_colours <- c("Lake" = "#440154", "River" = "#47A635")
+
 #' EQR PLOT WITH COMBINED DATA
 # Define ecological quality classes and their colors with explicit ordering
 eco_classes <- data.frame(
@@ -684,8 +686,9 @@ P1_combined <- ggplot() +
              size = 2) +
 
   # Color scale for points
-  scale_color_manual(values = c("LAKE" = "darkblue", "RIVER" = "darkgreen"),
-                     name = "Waterbody Type") +
+  scale_color_manual(values = waterbody_colours,
+                     name = "",
+                     guide = "none") + # shared waterbody legend is added to the right of the combined figure
 
   # Add the fitted line from the combined model
   geom_line(data = MyDataCombined1,
@@ -710,7 +713,7 @@ P1_combined <- ggplot() +
 
   # Labels and theme
   labs(x = "Ecological Quality Ratio",
-       y = "Vector Abundance") +
+       y = "Dipteran Abundance") +
 
   # Custom theming
   theme_minimal() +
@@ -790,8 +793,9 @@ P2_combined <- ggplot() +
               alpha = 0.2,
               fill = "black") +
   # Color scale for points
-  scale_color_manual(values = c("LAKE" = "darkblue", "RIVER" = "darkgreen"),
-                     name = "Waterbody Type") +
+  scale_color_manual(values = waterbody_colours,
+                     name = "",
+                     guide = "none") + # shared waterbody legend is added to the right of the combined figure
   # Add hidden points for precipitation color bar (using a new aesthetic)
   geom_point(
     data = legend_data,
@@ -817,7 +821,7 @@ P2_combined <- ggplot() +
   labs(
        # caption = "All other covariates held at their mean, year set to 2022, and waterbody type not considered",
        x = "Precipitation (mm)",
-       y = "Vector Abundance") +
+       y = "Dipteran Abundance") +
   # Custom theming
   theme_minimal() +
   My_theme +
@@ -886,8 +890,9 @@ P3_combined <- ggplot() +
               alpha = 0.2,
               fill = "black") +
   # Color scale for points
-  scale_color_manual(values = c("LAKE" = "darkblue", "RIVER" = "darkgreen"),
-                     name = "Waterbody Type") +
+  scale_color_manual(values = waterbody_colours,
+                     name = "",
+                     guide = "none") + # shared waterbody legend is added to the right of the combined figure
   # Add hidden points for temperature color bar (using a different aesthetic)
   geom_point(
     data = legend_data,
@@ -911,7 +916,7 @@ P3_combined <- ggplot() +
   ylim(range(df$Counts[df$Counts <= 250])) +
   # Labels and theme
   labs(x = "Minimum Temperature (°C)",
-       y = "Vector Abundance") +
+       y = "Dipteran Abundance") +
   # Custom theming
   theme_minimal() +
   My_theme +
@@ -979,8 +984,9 @@ P4_combined <- ggplot() +
               alpha = 0.2,
               fill = "black") +
   # Color scale for waterbody type points
-  scale_color_manual(values = c("LAKE" = "darkblue", "RIVER" = "darkgreen"),
-                     name = "Waterbody Type") +
+  scale_color_manual(values = waterbody_colours,
+                     name = "",
+                     guide = "none") + # shared waterbody legend is added to the right of the combined figure
   # Add hidden points for elevation color bar (using fill)
   geom_point(
     data = legend_data,
@@ -1003,7 +1009,7 @@ P4_combined <- ggplot() +
   ylim(range(df$Counts[df$Counts <= 250])) +
   # Labels and theme
   labs(x = "Elevation (m a.s.l.)",
-       y = "Vector Abundance") +
+       y = "Dipteran Abundance") +
   # Custom theming
   theme_minimal() +
   My_theme +
@@ -1045,7 +1051,7 @@ plots_list <- list(
 )
 
 # Create layout using patchwork
-P6_combined <- (
+panels_combined <- (
   plots_list[[1]] + plots_list[[2]] +
   plots_list[[3]] + plots_list[[4]]
 ) +
@@ -1054,10 +1060,27 @@ P6_combined <- (
     axes = "collect_y"
   )
 
+#====== Shared waterbody type legend (right of the panels) ======
+# Build a plot that only exists to draw the legend, then extract the legend grob
+waterbody_legend_plot <- ggplot(df, aes(x = eqr, y = Counts, color = waterbody_type)) +
+  geom_point(size = 2) +
+  scale_color_manual(values = waterbody_colours,
+                     name = "",
+                     guide = guide_legend(override.aes = list(size = 7, alpha = 1))) +
+  theme_minimal() +
+  My_theme +
+  theme(legend.position = "right")
+
+waterbody_legend_gtable <- ggplotGrob(waterbody_legend_plot)
+waterbody_legend <- waterbody_legend_gtable$grobs[[which(waterbody_legend_gtable$layout$name == "guide-box-right")]]
+
+P6_combined <- panels_combined | wrap_elements(full = waterbody_legend)
+P6_combined <- P6_combined + plot_layout(widths = c(1, 0.12))
+
 P6_combined
 
 # Save the plot
-ggsave("Plots/Figure4_predicted_fixed_effects_without_spatial.png", width = 10, height = 12, bg = "white", dpi = 300)
+ggsave("Plots/Figure4_predicted_fixed_effects_without_spatial.png", plot = P6_combined, width = 11, height = 12, bg = "white", dpi = 300)
 
 ###############################################################################################################
 # CLEAN UP WORKSPACE

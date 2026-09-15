@@ -1180,7 +1180,7 @@ create_simple_inla_table <- function(inla_model) {
     "artificial.std" = "Artificial Surface (%)",
     "natural.std" = "Natural Area (%)",
     "year.std" = "Year",
-    "waterbody_type.L" = "Lakes"
+    "waterbody_typeLake" = "Lakes (vs. Rivers)"
   )
 
   # Apply hyperparameter labels with symbols

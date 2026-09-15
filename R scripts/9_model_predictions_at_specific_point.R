@@ -60,9 +60,8 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
                                         labels = c("Bad", "Poor", "Moderate", "Good", "High"),
                                         ordered = F), # make EQC a factor
          waterbody_name   = factor(waterbody_name), # make waterbody_name a factor
-         waterbody_type   = factor(waterbody_type, levels = c("lake", "river"),
-                                                   labels = c("Lake", "River"),
-                                                   ordered = T), # make waterbody_type a factor
+         waterbody_type   = factor(waterbody_type, levels = c("river", "lake"),
+                                                   labels = c("River", "Lake")), # unordered factor with River as reference level, so the model estimates Lakes relative to Rivers
          date             = as.Date(date, format = "%Y-%m-%d"), # make the dates dates
          doy              = yday(date)) |> # calculate sampling day of year (doy)
   dplyr::rename(agriculture      = agricultural_areas,
@@ -71,7 +70,7 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
          water            = water_bodies,
          wetlands         = wetlands) |>
   dplyr::select(-c(observation_period, sampling_events)) |> # removes unnecessary columns
-  arrange(desc(waterbody_type), site_id, year) |>  # order the data.frame
+  arrange(waterbody_type, site_id, year) |>  # order the data.frame
   as.data.frame() # Convert tibble to dataframe because some older code does not recognize tibble
 
 #' What do we have?
@@ -148,7 +147,7 @@ df <- df |>
     sampling_events = n_distinct(year)
   ) |>
   ungroup() |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 
@@ -160,7 +159,7 @@ df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 #'  Keep sites with less than 1 sampling events throughout the observation period
 df <- df |>
   filter(sampling_events >= 1) |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 #* Subsection 4.2: Missing values----
 
@@ -413,7 +412,7 @@ colnames(X)
 #' This is a model with spatial dependency, based on mesh 1.
 f1 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                      f(w, model = spde1)
 
 #* Subsection 7.8: Execute the INLA models----
@@ -460,7 +459,7 @@ ggplot(BetaFinal_df, aes(x = Mean, y = Covariate)) +
        y = "Covariate") +
   theme_minimal()
 # If a 95% CI crosses the dotted red line, then the covariate is important.
-# Intercept is the baseline where everything is at the average. Lakes have higher dipteran counts, but this is not statistically important.
+# Intercept is the baseline for Rivers with all standardized covariates at their average. waterbody_typeLake is the difference between Lakes and Rivers (log scale).
 # If you use a spatial-temporal model, you may very well find that the confidence intervals will get a bit smaller, making the differences between lakes and rivers statistically important.
 
 #' Here is the posterior mean of the theta:
@@ -474,7 +473,10 @@ BetaFinal_df
 #' E[Counts_i] = mu_i
 #' var[Counts_i] = mu_i + mu_i^2 / 0.14
 
-#' mu_i = exp(1.415 +
+#' Values below are from the previous ordered-factor parameterisation, converted to the
+#' River-reference coding (Intercept = 1.415 + 0.296 / sqrt(2); Lake = -0.296 * sqrt(2)).
+#' Update them with BetaFinal_df after re-running.
+#' mu_i = exp(1.624 +
 #'            0.753 * eqr.std +
 #'            0.472 * ppt.std +
 #'            0.228 * tmin.std +
@@ -484,7 +486,7 @@ BetaFinal_df
 #'            0.171 * artificial.std +
 #'            0.171 * natural.std +
 #'           -0.022 * year.std +
-#'            0.296 * waterbody_type.L + u_i)
+#'           -0.419 * waterbody_typeLake + u_i)
 
 #' get shape files
 lithuania.shp <- geoboundaries("Lithuania")
@@ -516,9 +518,7 @@ MyData2 <- read.csv("Outputs/6_prediction_data.csv") |>
   mutate(site_id          = as.factor(site_id),
          sample_id        = as.factor(sample_id),
          date             = as.Date(date, format = "%Y-%m-%d"),
-         waterbody_type   = factor(waterbody_type, levels = c("Lake", "River"),
-                                                   labels = c("Lake", "River"),
-                                                   ordered = T)) |>
+         waterbody_type   = factor(waterbody_type, levels = c("River", "Lake"))) |> # same coding as df (River reference)
   dplyr::rename(natural  = forest_and_semi_natural_areas,
                 water    = water_bodies,
                 wetlands = wetlands,
@@ -547,7 +547,7 @@ MyData2$agriculture           <- 0                                              
 MyData2$artificial            <- 0                                                 # <- we will extract this via Copernicus land cover data, this was NA so we changed it to 0 since the sum was already 1
 # MyData2$natural.std          <- mean(df$natural.std)                               # <- we will extract this via Copernicus land cover data
 # MyData2$year.std             <- (2023 - mean(df$year)) / sd(df$year)               # <- we will use the dates that are in MyData2, i.e., the dates of the actual sampling
-# MyData2$waterbody_type.L     <- factor("Lake", levels = levels(df$waterbody_type)) # <- The Curonian Spit does not have any rivers, therefore we will use Lakes. We use the already set factor.
+# MyData2$waterbody_type       <- factor("Lake", levels = levels(df$waterbody_type)) # <- The Curonian Spit does not have any rivers, therefore we will use Lakes. We use the already set factor.
 
 #' In other words, we pretend that at the red site we have the following
 #' covariate conditions:

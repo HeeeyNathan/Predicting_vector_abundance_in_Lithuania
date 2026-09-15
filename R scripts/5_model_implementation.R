@@ -109,9 +109,6 @@
 #' during feeding on blood and have been increasing in prevalence among birds since observations
 #' began (see below).
 
-print(readRDS("Plots/Figure1_parasite_prevalence_dynamics.RDS"))
-
-
 #' Evidence suggests that Diptera (i.e., true flies) are increasing in both abundance and richness
 #' throughout Lithuania (Baker et al., 2024), potentially explaining the increase in prevalence of
 #' malarial haemosporidian parasite prevalence in birds.
@@ -259,7 +256,6 @@ print(readRDS("Plots/Baker_et.al._2024_trends.rds"))
 #'  - Determine areas in which sampling should be conducted to maximise chances of catching malarial vectors.
 
 
-
 # Section 2: Import the data----
 #* Subsection 2.1: Load the packages----
 
@@ -291,6 +287,8 @@ library(reshape)
 library(grid)
 library(gridExtra)
 library(kableExtra)
+library(readxl)
+library(writexl)
 source(file = "Additional functions/HighstatLibV15.R") # <---- the use of these functions requires a citation: Zuur, A.F., Ieno, E.N., Walker, N., Saveliev, A.A., Smith, G.M., 2009. Mixed Effects Models and Extensions in Ecology with R. Springer, New York https://doi.org/10.1007/978-0-387-87458-6.
 
 
@@ -318,9 +316,8 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
                                         labels = c("Bad", "Poor", "Moderate", "Good", "High"),
                                         ordered = F), # make EQC a factor
          waterbody_name   = factor(waterbody_name), # make waterbody_name a factor
-         waterbody_type   = factor(waterbody_type, levels = c("lake", "river"),
-                                                   labels = c("Lake", "River"),
-                                                   ordered = T), # make waterbody_type a factor
+         waterbody_type   = factor(waterbody_type, levels = c("river", "lake"),
+                                                   labels = c("River", "Lake")), # unordered factor with River as reference level, so the model estimates Lakes relative to Rivers
          date             = as.Date(date, format = "%Y-%m-%d"), # make the dates dates
          doy              = yday(date)) |> # calculate sampling day of year (doy)
   dplyr::rename(agriculture      = agricultural_areas,
@@ -329,7 +326,7 @@ df <- read.csv("Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_ele
          water            = water_bodies,
          wetlands         = wetlands) |>
   dplyr::select(-c(observation_period, sampling_events)) |> # removes unnecessary columns
-  arrange(desc(waterbody_type), site_id, year) |>  # order the data.frame
+  arrange(waterbody_type, site_id, year) |>  # order the data.frame
   as.data.frame() # Convert tibble to dataframe because some older code does not recognize tibble
 
 #' What do we have?
@@ -406,7 +403,7 @@ df <- df |>
     sampling_events = n_distinct(year)
   ) |>
   ungroup() |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 
@@ -418,7 +415,7 @@ df[, c("site_id", "observation_period", "sampling_events")] |> unique()
 #'  Keep sites with less than 1 sampling events throughout the observation period
 df <- df |>
   filter(sampling_events >= 1) |>
-  arrange(desc(waterbody_type), site_id, year)
+  arrange(waterbody_type, site_id, year)
 
 #* Subsection 4.2: Missing values----
 
@@ -457,6 +454,11 @@ df |>
 table(df$year)
 
 # That is better, but 2018 and 2019 still have fewer sites sampled. Lets keep them in for now
+
+# list of unique sites kept for analyses
+site_list <- tibble(site_code = unique(df$site_code))
+write_xlsx(site_list, "Outputs/7_site_list.xlsx")
+
 
 #'  Average number of sites sampled per year (overall)
 df |>
@@ -555,7 +557,7 @@ unique_sites <- df |>
   mutate(avg_eqc_cat = factor(avg_eqc_num,
                               levels = c(1, 2, 3, 4, 5),
                               labels = c("Bad", "Poor", "Moderate", "Good", "High"))) |>
-  dplyr::arrange(desc(waterbody_type), site_id)
+  dplyr::arrange(waterbody_type, site_id)
 
 write_csv(unique_sites, "Outputs/5_unique_sites_for_plotting.csv")
 
@@ -653,6 +655,7 @@ p1 <- df |>
 p1
 # a slightly positive relationship
 p1 + facet_grid(~waterbody_type)
+p1 + facet_grid(~month)
 # a similar relationship between lakes and rivers
 
 
@@ -879,9 +882,9 @@ p <- ggplot(data = CroppedLithuania) +
                       size = MyCex,
                       data = df) +
        scale_color_manual(name = "Waterbody type",
-                          values = c("black", "red"),
+                          values = c("Lake" = "black", "River" = "red"),
                           guide = guide_legend(override.aes = list(size = 4))) +
-       scale_shape_manual(name = "Waterbody type", values = c(19, 18)) +
+       scale_shape_manual(name = "Waterbody type", values = c("Lake" = 19, "River" = 18)) +
        xlab("Longitude") + ylab("Latitude") +
        My_theme + theme(legend.position = "bottom")
 p
@@ -1268,14 +1271,14 @@ f0 <-  Counts ~ eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
 #' This is a model with spatial dependency, based on mesh 1.
 f1 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                      f(w, model = spde1)
 
 
 #' This is a model with spatial dependency, based on mesh2.
 f2 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                      f(w, model = spde2)
 
 
@@ -1484,6 +1487,14 @@ MyData <- MyData |>
 
 range(MyData$w.pm_converted, na.rm = TRUE)
 
+# Symmetric colour limits based on the values inside Lithuania, so white always means no spatial effect
+w.lim <- max(abs(MyData$w.pm), na.rm = TRUE)
+
+# Legend labels showing w and the corresponding % change in expected abundance, (exp(w) - 1) * 100
+w_labels <- function(x) {
+  ifelse(x == 0, "0\n(0%)", sprintf("%+g\n(%+.0f%%)", x, (exp(x) - 1) * 100))
+}
+
 
 # Now use these limits in your plot
 ggplot() +
@@ -1509,8 +1520,10 @@ ggplot() +
           linewidth = 0.5) +
 
   scale_fill_gradient2(
-    name = "Posterior means (w)",
-    limits = c(min(MyData), max(w.pm)),
+    name = "Prosterior means, w (% change in expected abundance)",
+    limits = c(-w.lim, w.lim),
+    breaks = seq(-2, 2, by = 1),
+    labels = w_labels,
     midpoint = 0,
     low = "#21918c",
     mid = "white",
@@ -1576,7 +1589,7 @@ covariate_labels <- c(
   "artificial.std" = "Artificial Surface (%)",
   "natural.std" = "Natural Area (%)",
   "year.std" = "Year",
-  "waterbody_type.L" = "Lakes"
+  "waterbody_typeLake" = "Lakes (vs. Rivers)"
 )
 
 # First, let's add a column to identify significant effects
@@ -1585,7 +1598,7 @@ BetasI1_df <- BetasI1_df|>
 
 # Create a function to format the labels based on significance
 format_labels <- function(variable, is_significant, labels_map) {
-  result <- labels_map[variable]
+  result <- labels_map[as.character(variable)] # match by name, not by factor position
   result[is_significant] <- sprintf("<b>%s</b>", result[is_significant])
   return(result)
 }
@@ -1622,15 +1635,15 @@ ggplot(BetasI1_df, aes(x = Mean, y = Covariate)) +
   scale_color_manual(values = c("gray75", "#21918c")) +
   guides(linewidth = "none") +
   # Add this theme element to render HTML in text
-  theme(axis.text.y = ggtext::element_markdown())
+  theme(axis.text.y.left = ggtext::element_markdown()) # must target axis.text.y.left in ggplot2 >= 4.0, otherwise HTML tags print literally
 
 ggsave("Plots/Figure3_fixed_effects.png", width = 10, height = 8, bg = "white", dpi = 300)
+
+inla.pmarginal(0, I1$marginals.fixed$waterbody_typeLake) # 93% probability that lakes have fewer vectors than rivers, but it is uncerntain as confidence intervals overlap zero.
 
 # Create a simplified table of model output
 result_table <- create_simple_inla_table(I1)
 result_table
-
-save_kable(result_table, "Plots/TableS2_model_results.html") # <---- save table as png manually (go to 'export' within the viewer window)
 
 # Section 11: Model validation for the INLA NB GLM I1 ----
 
@@ -1906,6 +1919,247 @@ MyCompareBetasofModels(AllModels = list(Out1, Out2, Out3),
 
 
 
+# Section 12A: Within-season timing and repeated site visits----
+
+#' Reviewer comment 1 asked how seasonal sampling and unequal sampling
+#' frequency were accounted for. For the data used here (2013 - 2022):
+#'  - Lakes were sampled in April - May (day of year 104 - 152) and rivers in
+#'    September - November (day of year 246 - 334). Season is therefore fully
+#'    aliased with waterbody_type: waterbody_typeLake estimates habitat and
+#'    season together, and a separate season term cannot be estimated.
+#'  - Lakes and rivers were sampled with the same protocol (10 pooled kick
+#'    subsamples, 1 m2, plus hand-picking) and no site was sampled more than
+#'    once per year. Effort per observation is constant, so an offset would
+#'    only shift the intercept.
+#'  - Sites were revisited in different numbers of years (lakes 1.7, rivers
+#'    2.5 years on average), so observations from the same site are repeated
+#'    measures.
+
+#' We test two additions to model I1 (same mesh, priors and covariates):
+#'  1. Within-season timing: day of year standardised within each waterbody
+#'     type, with a separate slope for rivers and lakes.
+#'  2. A site-level iid random intercept for repeated visits.
+#'
+#'  I5a: I1 + within-season day of year
+#'  I5b: I1 + site random intercept
+#'  I5c: I1 + within-season day of year + site random intercept
+
+
+#* Subsection 12A.1: Define the new covariates----
+
+#' Standardise day of year within each waterbody type, so that the slopes
+#' describe timing within a season and are not aliased with waterbody_type.
+df <- df |>
+  dplyr::group_by(waterbody_type) |>
+  dplyr::mutate(doy.wb.std = (doy - mean(doy)) / sd(doy)) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(doy.river = ifelse(waterbody_type == "River", doy.wb.std, 0),
+                doy.lake  = ifelse(waterbody_type == "Lake",  doy.wb.std, 0),
+                site.idx  = as.numeric(factor(site_id))) |>
+  as.data.frame()
+
+
+#* Subsection 12A.2: Make a stack----
+
+X5 <- model.matrix(~ eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
+                     agriculture.std + artificial.std + natural.std +
+                     year.std + waterbody_type + doy.river + doy.lake, data = df)
+X5 <- as.data.frame(X5)
+N  <- nrow(df)
+
+Stack5 <- inla.stack(
+  tag = "Fit",
+  data = list(Counts = df$Counts),
+  A = list(1, 1, A1),
+  effects = list(
+    Intercept = rep(1, N),
+    X         = data.frame(X5[, -1], site.idx = df$site.idx), #' Covariates and site index
+    w         = w1.index))
+
+
+#* Subsection 12A.3: Specify and execute the models----
+
+#' PC prior for the site random intercept, mirroring the prior for sigma_u:
+#'  P(sigma_site > 2) = 0.05
+site.prior <- list(prec = list(prior = "pc.prec", param = c(2, 0.05)))
+
+f5a <- Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
+                     agriculture.std + artificial.std + natural.std +
+                     year.std + waterbody_typeLake + doy.river + doy.lake +
+                     f(w, model = spde1)
+
+f5b <- Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
+                     agriculture.std + artificial.std + natural.std +
+                     year.std + waterbody_typeLake +
+                     f(w, model = spde1) +
+                     f(site.idx, model = "iid", hyper = site.prior)
+
+f5c <- Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
+                     agriculture.std + artificial.std + natural.std +
+                     year.std + waterbody_typeLake + doy.river + doy.lake +
+                     f(w, model = spde1) +
+                     f(site.idx, model = "iid", hyper = site.prior)
+
+I5a <- inla(f5a,
+            family = "nbinomial",
+            data = inla.stack.data(Stack5),
+            control.compute = MyControlCompute,
+            control.predictor = list(A = inla.stack.A(Stack5)))
+
+I5b <- inla(f5b,
+            family = "nbinomial",
+            data = inla.stack.data(Stack5),
+            control.compute = MyControlCompute,
+            control.predictor = list(A = inla.stack.A(Stack5)))
+
+I5c <- inla(f5c,
+            family = "nbinomial",
+            data = inla.stack.data(Stack5),
+            control.compute = MyControlCompute,
+            control.predictor = list(A = inla.stack.A(Stack5)))
+
+
+#* Subsection 12A.4: Compare the models----
+
+Models12A <- list(I1 = I1, I5a = I5a, I5b = I5b, I5c = I5c)
+
+#' Model fit
+Results12A <- data.frame(
+  Model = c("I1: NB GLM + SRF (mesh1)",
+            "I5a: I1 + within-season day of year",
+            "I5b: I1 + site random intercept",
+            "I5c: I1 + day of year + site random intercept"),
+  DIC   = sapply(Models12A, function(m) m$dic$dic),
+  WAIC  = sapply(Models12A, function(m) m$waic$waic))
+Results12A$dDIC  <- Results12A$DIC  - min(Results12A$DIC)
+Results12A$dWAIC <- Results12A$WAIC - min(Results12A$WAIC)
+Results12A
+
+#' Within-season timing slopes (log scale, per 1 SD of day of year within each waterbody type)
+round(I5a$summary.fixed[c("doy.river", "doy.lake"), c("mean", "0.025quant", "0.975quant")], 3)
+round(I5c$summary.fixed[c("doy.river", "doy.lake"), c("mean", "0.025quant", "0.975quant")], 3)
+
+#' SD of day of year within each waterbody type (to convert slopes to days)
+tapply(df$doy, df$waterbody_type, sd)
+
+#' Spatial field: does the latent spatial variation shrink?
+SpatialParams12A <- t(sapply(Models12A, MySpatialParams, ThisSpde = spde1))
+round(SpatialParams12A, 3)
+
+#' Posterior mean SD of the site random intercept
+SiteSD <- function(Model) {
+  inla.emarginal(function(x) 1 / sqrt(x), Model$marginals.hyperpar[["Precision for site.idx"]])
+}
+round(sapply(list(I5b = I5b, I5c = I5c), SiteSD), 3)
+
+#' Fixed effects shared by all four models
+SharedBetas <- rownames(I1$summary.fixed)
+Out12A <- lapply(Models12A, function(m) m$summary.fixed[SharedBetas, c("mean", "0.025quant", "0.975quant")])
+round(sapply(Out12A, function(x) x[, "mean"]), 3) |> `rownames<-`(SharedBetas)
+
+#* Subsection 12A.5: Supplementary table and figure----
+
+#' Summarise a posterior as "mean [2.5%, 97.5%]"
+FormatCrI <- function(x) sprintf("%.3f [%.3f, %.3f]", x[1], x[2], x[3])
+
+#' Labels (defined here so this section does not depend on Section 10)
+Labels12A <- c(
+  "Intercept"          = "Intercept (Rivers)",
+  "eqr.std"            = "Ecological Quality Ratio (EQR)",
+  "ppt.std"            = "Precipitation (mm)",
+  "tmin.std"           = "Minimum Temperature (°C)",
+  "ws.std"             = "Wind Speed (m/s)",
+  "elevation.std"      = "Elevation (m.a.s.l.)",
+  "agriculture.std"    = "Agricultural Land (%)",
+  "artificial.std"     = "Artificial Surface (%)",
+  "natural.std"        = "Natural Area (%)",
+  "year.std"           = "Year",
+  "waterbody_typeLake" = "Lakes (vs. Rivers)",
+  "doy.river"          = "Day of year within season (Rivers)",
+  "doy.lake"           = "Day of year within season (Lakes)"
+)
+
+#' Model fit
+Fit12A <- rbind(DIC   = sprintf("%.1f", Results12A$DIC),
+                WAIC  = sprintf("%.1f", Results12A$WAIC),
+                ΔDIC  = sprintf("%.1f", Results12A$dDIC),
+                ΔWAIC = sprintf("%.1f", Results12A$dWAIC))
+colnames(Fit12A) <- names(Models12A)
+
+#' Fixed effects (a dash means the term is not in the model)
+FixedNames12A <- c(SharedBetas, "doy.river", "doy.lake")
+Fixed12A <- sapply(Models12A, function(m) {
+  sapply(FixedNames12A, function(p) {
+    if (p %in% rownames(m$summary.fixed)) {
+      FormatCrI(unlist(m$summary.fixed[p, c("mean", "0.025quant", "0.975quant")]))
+    } else "-"
+  })
+})
+rownames(Fixed12A) <- Labels12A[FixedNames12A]
+
+#' Hyperparameters (site SD derived from the precision of the site random intercept)
+Hyper12A <- sapply(Models12A, function(m) {
+  h <- m$summary.hyperpar
+  q <- c("mean", "0.025quant", "0.975quant")
+  site <- if ("Precision for site.idx" %in% rownames(h)) {
+    prec <- unlist(h["Precision for site.idx", c("0.025quant", "0.975quant")])
+    FormatCrI(c(SiteSD(m), 1 / sqrt(prec[2]), 1 / sqrt(prec[1])))
+  } else "-"
+  c(FormatCrI(unlist(h["size for the nbinomial observations (1/overdispersion)", q])),
+    FormatCrI(unlist(h["Range for w", q])),
+    FormatCrI(unlist(h["Stdev for w", q])),
+    site)
+})
+rownames(Hyper12A) <- c("θ (negative binomial size)", "Spatial range (km)",
+                        "Spatial SD (σ)", "Site random intercept SD")
+
+#' Combine and format
+Table12A <- rbind(Fit12A, Fixed12A, Hyper12A)
+Table12A <- data.frame(Parameter = rownames(Table12A), Table12A,
+                       row.names = NULL, check.names = FALSE)
+colnames(Table12A) <- c("Parameter",
+                        "Spatial NB GLM mesh 1",
+                        "Spatial NB GLM mesh 1 + day of year",
+                        "Spatial NB GLM mesh 1 + site",
+                        "Spatial NB GLM mesh 1 + both")
+
+TableS2 <- Table12A |>
+  kbl(format = "html",
+      caption = "Table S2. Sensitivity of the spatial negative binomial model to within-season sampling day, repeated site visits, or both. Model fit is summarized by the deviance information criterion (DIC) and the Watanabe–Akaike information criterion (WAIC), with differences from the best-fitting model (ΔDIC, ΔWAIC). Day of year is standardized within each waterbody type. Fixed effects and hyperparameters are posterior means, with 95% credible intervals (CrIs) in square brackets.") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) |>
+  column_spec(1, bold = TRUE) |>
+  pack_rows("Model fit", 1, nrow(Fit12A)) |>
+  pack_rows("Fixed effects", nrow(Fit12A) + 1, nrow(Fit12A) + nrow(Fixed12A)) |>
+  pack_rows("Hyperparameters", nrow(Fit12A) + nrow(Fixed12A) + 1, nrow(Table12A))
+TableS2
+
+save_kable(TableS2, "Plots/TableS2_seasonal_site_model_comparison.html")
+
+#' Fixed effects shared by all four models
+FigS12 <- MyCompareBetasofModels(AllModels  = Out12A,
+                                 ModelNames = c("Spatial NB GLM mesh 1", "Spatial NB GLM mesh 1 + day of year",
+                                                "Spatial NB GLM mesh 1 + site", "Spatial NB GLM mesh 1 + both"))
+FigS12
+
+ggsave("Plots/FigureS12_seasonal_site_model_comparison.png", plot = FigS12, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
+
+
+#* Subsection 12A.6: Conclusions----
+
+#' - Neither addition clearly improves fit: all DIC differences are < 3, and WAIC
+#'   favours I1 (the site random intercept adds ~40 effective parameters).
+#' - The same covariates have 95% CrIs excluding zero in all four models (EQR,
+#'   precipitation, minimum temperature, elevation), with similar magnitudes.
+#' - Within-season timing: no trend for rivers (Sep - Nov); lakes decline through
+#'   the spring window (I5c: -0.30, 95% CrI -0.60 to -0.01, per ~10.6 days).
+#' - The site random intercept (SD ~0.7) reduces the spatial SD by ~15% (1.05 to
+#'   0.87) and increases the range (29 to 45 km), but substantial latent spatial
+#'   variation remains.
+#' - We keep I1 as the main model and report this section as a supplementary
+#'   robustness analysis.
+
+
+
 # Section 13: NB GLM with replicate spatial-temporal term----
 
 #* Subsection 13.1: Define blocking structure----
@@ -2005,7 +2259,7 @@ colnames(X)
 #' This is the model with spatial dependency, based on mesh 2a.
 f3 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                  f(w, model = spde3Repl, replicate = w.repl) # <---  w.repl is correct, should not be w3Repl
 
 
@@ -2028,7 +2282,7 @@ WAICs <- c(I0$waic$waic, I1$waic$waic, I2$waic$waic, I3$waic$waic)
 Results <- data.frame(Models = c("NB GLM",
                                  "NB GLM + SRF with mesh1",
                                  "NB GLM + SRF with mesh2",
-                                 "NB GLM + replicate SRF with mesh2"),
+                                 "NB GLM + replicate SRF with mesh1"),
                       DIC = DICs,
                       WAIC = WAICs)
 Results
@@ -2279,7 +2533,7 @@ Stack4.ar1 <- inla.stack(
 #' correlation, based on mesh2a.
 f4 <-  Counts ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L +
+                     year.std + waterbody_typeLake +
                      f(w,
                        model = spde4ar1,
                        group = w.group,
@@ -2350,7 +2604,7 @@ covariate_labels <- c(
   "artificial.std" = "Artificial Surface (%)",
   "natural.std" = "Natural Area (%)",
   "year.std" = "Year",
-  "waterbody_type.L" = "Lakes"
+  "waterbody_typeLake" = "Lakes (vs. Rivers)"
 )
 
 # First, let's add a column to identify significant effects
@@ -2359,7 +2613,7 @@ BetasI4_df <- BetasI4_df|>
 
 # Create a function to format the labels based on significance
 format_labels <- function(variable, is_significant, labels_map) {
-  result <- labels_map[variable]
+  result <- labels_map[as.character(variable)] # match by name, not by factor position
   result[is_significant] <- sprintf("<b>%s</b>", result[is_significant])
   return(result)
 }
@@ -2396,7 +2650,7 @@ ggplot(BetasI4_df, aes(x = Mean, y = Covariate)) +
   scale_color_manual(values = c("gray75", "#21918c")) +
   guides(linewidth = "none") +
   # Add this theme element to render HTML in text
-  theme(axis.text.y = ggtext::element_markdown())
+  theme(axis.text.y.left = ggtext::element_markdown()) # must target axis.text.y.left in ggplot2 >= 4.0, otherwise HTML tags print literally
 
 
 #' We want to have 10 panels in 1 ggplot graph. Each panel should
@@ -2601,17 +2855,17 @@ summary(I4)
 # Section 15: Quick comparison of all models----
 
 #' Compare DIC and WAIC.
-DICs <- c(I1$dic$dic, I1$dic$dic, I2$dic$dic, I3$dic$dic, I4$dic$dic)
-WAICs <- c(I1$waic$waic, I1$waic$waic, I2$waic$waic, I3$waic$waic, I4$waic$waic)
+DICs <- c(I0$dic$dic, I1$dic$dic, I2$dic$dic, I3$dic$dic, I4$dic$dic)
+WAICs <- c(I0$waic$waic, I1$waic$waic, I2$waic$waic, I3$waic$waic, I4$waic$waic)
 Results <- data.frame(Models = c("NB GLM",
-                                 "NB GLM + SRF with mesh2a",
-                                 "NB GLM + SRF with mesh2b",
-                                 "NB GLM + replicate SRF",
-                                 "NB GLM + ar1 SRF"),
+                                 "NB GLM + SRF with mesh1",
+                                 "NB GLM + SRF with mesh2",
+                                 "NB GLM + replicate SRF with mesh1",
+                                 "NB GLM + ar1 SRF with mesh1"),
                       DIC = DICs,
                       WAIC = WAICs)
 Results
-#' The NB GLM is the best!
+#' Lower DIC/WAIC indicates better fit; check which model is lowest after re-running.
 
 
 
@@ -2896,15 +3150,16 @@ rownames(Out2.mesh2ar1)  <- I4$names.fixed
 MyNames <- c("NB GLM",
              "Spatial NB GLM mesh 1",
              "Spatial NB GLM mesh 2",
-             "Spatial NB GLM mesh 2 replicates",
-             "Spatial NB GLM mesh 2 ar1")
+             "Spatial NB GLM mesh 1 replicates",
+             "Spatial NB GLM mesh 1 ar1")
 
 #' Compare results of the two models using MyCompareBetasofModels
 #' (which is in our support file).
-MyCompareBetasofModels(AllModels = list(Out2, Out2.mesh1, Out2.mesh2, Out2.mesh2repl, Out2.mesh2ar1),
-                       ModelNames = MyNames)
+FigS1 <- MyCompareBetasofModels(AllModels  = list(Out2, Out2.mesh1, Out2.mesh2, Out2.mesh2repl, Out2.mesh2ar1),
+                                ModelNames = MyNames) #' labels defined in Section 10
+FigS1
 
-ggsave("Plots/FigureS1_fixed _effect_model_comparisons.png", width = 10, height = 10, units = "in", bg = "white", dpi = 300)
+ggsave("Plots/FigureS1_fixed _effect_model_comparisons.png", plot = FigS1, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
 
 #' There are some differences between the model without and with spatial dependency.
 #' There are no major differences between the spatial models.
@@ -3178,7 +3433,7 @@ for (i in 1:NumberOfMeshes) {
     #' Specify the model formula
     f.mesh <- vec_abund ~ -1 + Intercept + eqr.std + ppt.std + tmin.std + ws.std + elevation.std +
                      agriculture.std + artificial.std + natural.std +
-                     year.std + waterbody_type.L + f(w, model = spde)
+                     year.std + waterbody_typeLake + f(w, model = spde)
 
     #' Execute the INLA model.
     Inla.Results <- inla(f.mesh,
@@ -3452,7 +3707,7 @@ ThisX <- "tmin.std"
 # ThisX <- "artificial.std"
 # ThisX <- "natural.std"
 # ThisX <- "year.std"
-# ThisX <- "waterbody_type.L"
+# ThisX <- "waterbody_typeLake"
 
 #' Grab the posterior mean value and the 95% credible interval
 #' for the selected covariate, for each mesh and prior combi.

@@ -243,7 +243,7 @@ elevation_plot <- ggplot() +
   scale_color_gradientn(
     colors = c("#8C7853", "#D2C29D", "#097969"),
     limits = c(elev_range[1], max_elev),
-    name = "m",
+    name = "m a.s.l.",
     breaks = c(0, 100, 200, 300),
     guide = guide_colorbar(
       barwidth = 20,

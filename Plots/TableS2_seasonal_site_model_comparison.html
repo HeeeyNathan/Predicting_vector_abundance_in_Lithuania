@@ -281,146 +281,166 @@ border: 0;
 </head>
 <body>
 <table class="table table-striped table-hover table-condensed" style="color: black; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption>Negative Binomial Spatial GLM Model Results</caption>
+<caption>Table S2. Sensitivity of the spatial negative binomial model to within-season sampling day, repeated site visits, or both. Model fit is summarized by the deviance information criterion (DIC) and the Watanabe–Akaike information criterion (WAIC), with differences from the best-fitting model (ΔDIC, ΔWAIC). Day of year is standardized within each waterbody type. Fixed effects and hyperparameters are posterior means, with 95% credible intervals (CrIs) in square brackets.</caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> Group </th>
    <th style="text-align:left;"> Parameter </th>
-   <th style="text-align:right;"> Mean </th>
-   <th style="text-align:right;"> SD </th>
-   <th style="text-align:right;"> Lower </th>
-   <th style="text-align:right;"> Upper </th>
-   <th style="text-align:left;"> Important </th>
+   <th style="text-align:left;"> Spatial NB GLM mesh 1 </th>
+   <th style="text-align:left;"> Spatial NB GLM mesh 1 + day of year </th>
+   <th style="text-align:left;"> Spatial NB GLM mesh 1 + site </th>
+   <th style="text-align:left;"> Spatial NB GLM mesh 1 + both </th>
   </tr>
  </thead>
 <tbody>
-  <tr grouplength="11"><td colspan="7" style="border-bottom: 1px solid;"><strong>Fixed Effects</strong></td></tr>
+  <tr grouplength="4"><td colspan="5" style="border-bottom: 1px solid;"><strong>Model fit</strong></td></tr>
 <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> Intercept (Rivers) </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 1.416 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.179 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 1.067 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 1.775 </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> TRUE </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> DIC </td>
+   <td style="text-align:left;"> 8607.0 </td>
+   <td style="text-align:left;"> 8607.9 </td>
+   <td style="text-align:left;"> 8604.3 </td>
+   <td style="text-align:left;"> 8605.1 </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> Ecological Quality Ratio (EQR) </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.754 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.098 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.565 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.947 </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> TRUE </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> WAIC </td>
+   <td style="text-align:left;"> 8641.1 </td>
+   <td style="text-align:left;"> 8644.1 </td>
+   <td style="text-align:left;"> 8652.8 </td>
+   <td style="text-align:left;"> 8654.7 </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> Precipitation (mm) </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.473 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.094 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.287 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.656 </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> TRUE </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> ΔDIC </td>
+   <td style="text-align:left;"> 2.6 </td>
+   <td style="text-align:left;"> 3.6 </td>
+   <td style="text-align:left;"> 0.0 </td>
+   <td style="text-align:left;"> 0.8 </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> Minimum Temperature (°C) </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.228 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.104 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.023 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.433 </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> TRUE </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> ΔWAIC </td>
+   <td style="text-align:left;"> 0.0 </td>
+   <td style="text-align:left;"> 2.9 </td>
+   <td style="text-align:left;"> 11.7 </td>
+   <td style="text-align:left;"> 13.6 </td>
   </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Wind Speed (m/s) </td>
-   <td style="text-align:right;"> 0.121 </td>
-   <td style="text-align:right;"> 0.121 </td>
-   <td style="text-align:right;"> -0.117 </td>
-   <td style="text-align:right;"> 0.358 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> Elevation (m.a.s.l.) </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.636 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.151 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.333 </td>
-   <td style="text-align:right;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> 0.928 </td>
-   <td style="text-align:left;font-weight: bold;background-color: rgba(240, 249, 248, 255) !important;"> TRUE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Agricultural Land (%) </td>
-   <td style="text-align:right;"> 0.206 </td>
-   <td style="text-align:right;"> 0.180 </td>
-   <td style="text-align:right;"> -0.147 </td>
-   <td style="text-align:right;"> 0.560 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Artificial Surface (%) </td>
-   <td style="text-align:right;"> 0.171 </td>
-   <td style="text-align:right;"> 0.108 </td>
-   <td style="text-align:right;"> -0.041 </td>
-   <td style="text-align:right;"> 0.382 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Natural Area (%) </td>
-   <td style="text-align:right;"> 0.134 </td>
-   <td style="text-align:right;"> 0.159 </td>
-   <td style="text-align:right;"> -0.180 </td>
-   <td style="text-align:right;"> 0.446 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Year </td>
-   <td style="text-align:right;"> -0.022 </td>
-   <td style="text-align:right;"> 0.088 </td>
-   <td style="text-align:right;"> -0.195 </td>
-   <td style="text-align:right;"> 0.151 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Fixed Effects </td>
-   <td style="text-align:left;"> Lakes </td>
-   <td style="text-align:right;"> 0.296 </td>
-   <td style="text-align:right;"> 0.200 </td>
-   <td style="text-align:right;"> -0.097 </td>
-   <td style="text-align:right;"> 0.687 </td>
-   <td style="text-align:left;"> FALSE </td>
-  </tr>
-  <tr grouplength="3"><td colspan="7" style="border-bottom: 1px solid;"><strong>Hyperparameters</strong></td></tr>
+  <tr grouplength="13"><td colspan="5" style="border-bottom: 1px solid;"><strong>Fixed effects</strong></td></tr>
 <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Hyperparameters </td>
-   <td style="text-align:left;"> θ (Theta) </td>
-   <td style="text-align:right;"> 0.138 </td>
-   <td style="text-align:right;"> 0.007 </td>
-   <td style="text-align:right;"> 0.124 </td>
-   <td style="text-align:right;"> 0.153 </td>
-   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Intercept (Rivers) </td>
+   <td style="text-align:left;"> 1.626 [1.258, 2.009] </td>
+   <td style="text-align:left;"> 1.638 [1.273, 2.020] </td>
+   <td style="text-align:left;"> 1.541 [1.106, 1.993] </td>
+   <td style="text-align:left;"> 1.556 [1.116, 2.019] </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Hyperparameters </td>
-   <td style="text-align:left;"> Range for w </td>
-   <td style="text-align:right;"> 28.824 </td>
-   <td style="text-align:right;"> 6.093 </td>
-   <td style="text-align:right;"> 18.873 </td>
-   <td style="text-align:right;"> 42.754 </td>
-   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Ecological Quality Ratio (EQR) </td>
+   <td style="text-align:left;"> 0.753 [0.563, 0.949] </td>
+   <td style="text-align:left;"> 0.759 [0.566, 0.957] </td>
+   <td style="text-align:left;"> 0.805 [0.614, 1.000] </td>
+   <td style="text-align:left;"> 0.809 [0.617, 1.005] </td>
   </tr>
   <tr>
-   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Hyperparameters </td>
-   <td style="text-align:left;"> Stdev for w </td>
-   <td style="text-align:right;"> 1.049 </td>
-   <td style="text-align:right;"> 0.112 </td>
-   <td style="text-align:right;"> 0.843 </td>
-   <td style="text-align:right;"> 1.284 </td>
-   <td style="text-align:left;"> NA </td>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Precipitation (mm) </td>
+   <td style="text-align:left;"> 0.473 [0.287, 0.656] </td>
+   <td style="text-align:left;"> 0.454 [0.268, 0.639] </td>
+   <td style="text-align:left;"> 0.474 [0.286, 0.661] </td>
+   <td style="text-align:left;"> 0.453 [0.264, 0.640] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Minimum Temperature (°C) </td>
+   <td style="text-align:left;"> 0.228 [0.023, 0.433] </td>
+   <td style="text-align:left;"> 0.208 [0.002, 0.413] </td>
+   <td style="text-align:left;"> 0.232 [0.023, 0.440] </td>
+   <td style="text-align:left;"> 0.212 [0.003, 0.421] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Wind Speed (m/s) </td>
+   <td style="text-align:left;"> 0.121 [-0.117, 0.357] </td>
+   <td style="text-align:left;"> 0.126 [-0.111, 0.362] </td>
+   <td style="text-align:left;"> 0.139 [-0.101, 0.379] </td>
+   <td style="text-align:left;"> 0.141 [-0.099, 0.380] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Elevation (m.a.s.l.) </td>
+   <td style="text-align:left;"> 0.635 [0.331, 0.928] </td>
+   <td style="text-align:left;"> 0.635 [0.329, 0.927] </td>
+   <td style="text-align:left;"> 0.632 [0.312, 0.938] </td>
+   <td style="text-align:left;"> 0.621 [0.297, 0.929] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Agricultural Land (%) </td>
+   <td style="text-align:left;"> 0.207 [-0.147, 0.560] </td>
+   <td style="text-align:left;"> 0.181 [-0.172, 0.534] </td>
+   <td style="text-align:left;"> 0.244 [-0.117, 0.604] </td>
+   <td style="text-align:left;"> 0.222 [-0.138, 0.582] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Artificial Surface (%) </td>
+   <td style="text-align:left;"> 0.171 [-0.040, 0.382] </td>
+   <td style="text-align:left;"> 0.155 [-0.057, 0.366] </td>
+   <td style="text-align:left;"> 0.191 [-0.025, 0.408] </td>
+   <td style="text-align:left;"> 0.178 [-0.039, 0.395] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Natural Area (%) </td>
+   <td style="text-align:left;"> 0.134 [-0.179, 0.446] </td>
+   <td style="text-align:left;"> 0.106 [-0.209, 0.419] </td>
+   <td style="text-align:left;"> 0.141 [-0.177, 0.458] </td>
+   <td style="text-align:left;"> 0.111 [-0.208, 0.429] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Year </td>
+   <td style="text-align:left;"> -0.022 [-0.195, 0.151] </td>
+   <td style="text-align:left;"> -0.017 [-0.190, 0.156] </td>
+   <td style="text-align:left;"> -0.030 [-0.205, 0.145] </td>
+   <td style="text-align:left;"> -0.022 [-0.198, 0.153] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Lakes (vs. Rivers) </td>
+   <td style="text-align:left;"> -0.419 [-0.971, 0.138] </td>
+   <td style="text-align:left;"> -0.485 [-1.044, 0.078] </td>
+   <td style="text-align:left;"> -0.325 [-0.892, 0.247] </td>
+   <td style="text-align:left;"> -0.394 [-0.966, 0.183] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Day of year within season (Rivers) </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> -0.011 [-0.183, 0.160] </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> 0.013 [-0.162, 0.188] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Day of year within season (Lakes) </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> -0.250 [-0.536, 0.035] </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> -0.301 [-0.594, -0.008] </td>
+  </tr>
+  <tr grouplength="4"><td colspan="5" style="border-bottom: 1px solid;"><strong>Hyperparameters</strong></td></tr>
+<tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> θ (negative binomial size) </td>
+   <td style="text-align:left;"> 0.138 [0.124, 0.153] </td>
+   <td style="text-align:left;"> 0.138 [0.124, 0.154] </td>
+   <td style="text-align:left;"> 0.144 [0.128, 0.160] </td>
+   <td style="text-align:left;"> 0.144 [0.128, 0.161] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Spatial range (km) </td>
+   <td style="text-align:left;"> 28.965 [18.137, 44.384] </td>
+   <td style="text-align:left;"> 28.296 [17.446, 43.935] </td>
+   <td style="text-align:left;"> 42.958 [21.827, 74.477] </td>
+   <td style="text-align:left;"> 44.766 [21.779, 80.496] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Spatial SD (σ) </td>
+   <td style="text-align:left;"> 1.048 [0.834, 1.293] </td>
+   <td style="text-align:left;"> 1.047 [0.834, 1.291] </td>
+   <td style="text-align:left;"> 0.890 [0.635, 1.203] </td>
+   <td style="text-align:left;"> 0.870 [0.613, 1.186] </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;font-weight: bold;padding-left: 2em;" indentlevel="1"> Site random intercept SD </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> - </td>
+   <td style="text-align:left;"> 0.709 [0.433, 1.036] </td>
+   <td style="text-align:left;"> 0.753 [0.484, 1.083] </td>
   </tr>
 </tbody>
 </table>

@@ -3697,71 +3697,68 @@ ggsave("Sensitivity/FigureS7_sensitivity_MaternCorrelation2.png", width = 10, he
 #' We now show how/if the regression parameters are changing
 #' for different mesh configurations and priors for the range.
 
-#' Pick one of the following covariates:
-# ThisX <- "eqr.std"
-# ThisX <- "ppt.std"
-ThisX <- "tmin.std"
-# ThisX <- "ws.std"
-# ThisX <- "elevation.std"
-# ThisX <- "agriculture.std"
-# ThisX <- "artificial.std"
-# ThisX <- "natural.std"
-# ThisX <- "year.std"
-# ThisX <- "waterbody_typeLake"
+#' Covariates available for this plot:
+#'   "eqr.std", "ppt.std", "tmin.std", "ws.std", "elevation.std", "agriculture.std",
+#'   "artificial.std", "natural.std", "year.std", "waterbody_typeLake"
 
-#' Grab the posterior mean value and the 95% credible interval
-#' for the selected covariate, for each mesh and prior combi.
-MyData <- NULL
-k <- 1
-for (i in 1:NumberOfMeshes) {
-  for (j in 1:NumOfPriors4Range) {
-    modelResult <- InlaResultsList[[k]]
+#' Build the plot for one covariate: the posterior mean value and the 95% credible
+#' interval of that covariate, for each mesh and prior combi.
+SensitivityBetaPlot <- function(ThisX) {
+  MyData <- NULL
+  k <- 1
+  for (i in 1:NumberOfMeshes) {
+    for (j in 1:NumOfPriors4Range) {
+      modelResult <- InlaResultsList[[k]]
 
-    Betas <- modelResult$summary.fixed[, c("mean",
-                                           "0.025quant",
-                                           "0.975quant")]
+      Betas <- modelResult$summary.fixed[, c("mean",
+                                             "0.025quant",
+                                             "0.975quant")]
 
-    # Store the results in the data frame
-    Data.i <- data.frame(beta.pm    = Betas[ThisX, "mean"],
-                         SeUp       = Betas[ThisX, "0.975quant"],
-                         SeLo       = Betas[ThisX, "0.025quant"],
-                         PriorRange = RangePriorValues[j],
-                         MeshName   = MeshSizes[i])
-    MyData <- rbind(MyData,
-                    Data.i)
-    k <- k + 1
-  }}
+      # Store the results in the data frame
+      Data.i <- data.frame(beta.pm    = Betas[ThisX, "mean"],
+                           SeUp       = Betas[ThisX, "0.975quant"],
+                           SeLo       = Betas[ThisX, "0.025quant"],
+                           PriorRange = RangePriorValues[j],
+                           MeshName   = MeshSizes[i])
+      MyData <- rbind(MyData,
+                      Data.i)
+      k <- k + 1
+    }}
 
+  #' Add some nice labels for ggplot.
+  MyData$PriorRange <- factor(MyData$PriorRange,
+                              levels = RangePriorValues,
+                              labels = paste("P(Range<",
+                                             RangePriorValues, ")",
+                                             sep = ""))
 
-#' Add some nice labels for ggplot.
-MyData$PriorRange <- factor(MyData$PriorRange,
-                            levels = RangePriorValues,
-                            labels = paste("P(Range<",
-                                           RangePriorValues, ")",
-                                           sep = ""))
+  MyData$MeshName   <- factor(MyData$MeshName,
+                              levels = MeshSizes,
+                              labels = paste("w=",
+                                             MeshSizes,
+                                             sep = ""))
 
-MyData$MeshName   <- factor(MyData$MeshName,
-                            levels = MeshSizes,
-                            labels = paste("w=",
-                                           MeshSizes,
-                                           sep = ""))
+  #'  Plot the results.
+  ggplot(data = MyData,
+         aes(x = MeshName,
+             y = beta.pm,
+             ymax = SeUp,
+             ymin = SeLo)) +
+    geom_point() +
+    geom_errorbar(alpha = 0.5) +
+    labs(x = "Mesh size",
+         y = ThisX,
+         caption = "Sigma_u = c(2, 0.05)") +
+    theme(text = element_text(size = 15),
+          axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) +
+    facet_wrap(~ PriorRange, ncol = 3)
+}
 
-
-#'  Plot the results.
-tmin <- ggplot(data = MyData,
-       aes(x = MeshName,
-           y = beta.pm,
-           ymax = SeUp,
-           ymin = SeLo)) +
-  geom_point() +
-  geom_errorbar(alpha = 0.5) +
-  labs(x = "Mesh size",
-       y = ThisX,
-       caption = "Sigma_u = c(2, 0.05)") +
-  theme(text = element_text(size = 15),
-        axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) +
-  facet_wrap(~ PriorRange, ncol = 3)
-
+#' The four covariates shown in Figure S9
+eqr       <- SensitivityBetaPlot("eqr.std")
+ppt       <- SensitivityBetaPlot("ppt.std")
+tmin      <- SensitivityBetaPlot("tmin.std")
+elevation <- SensitivityBetaPlot("elevation.std")
 
 eqr
 ppt

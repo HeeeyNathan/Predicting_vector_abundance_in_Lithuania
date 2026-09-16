@@ -191,10 +191,11 @@ library(viridis)
 
 #====== Extract elevation data ======
 ll_proj <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-elev <- elevatr::get_elev_point(pt_df, prj = ll_proj)
-elev |>
-  kable() |>
-  kable_styling(bootstrap_options = c("striped", "hover"))
+# Not used further, and pt_df is not defined in this script, so these lines are commented out
+# elev <- elevatr::get_elev_point(pt_df, prj = ll_proj)
+# elev |>
+#   kable() |>
+#   kable_styling(bootstrap_options = c("striped", "hover"))
 
 #====== Extract boundaries ======
 lithuania_sf <- rgeoboundaries::geoboundaries("Lithuania", adm_lvl = 0)

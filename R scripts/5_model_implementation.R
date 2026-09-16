@@ -1009,7 +1009,7 @@ head(Loc)
 
 #' Distances between sites (i.e. trees).
 D <- dist(Loc)
-png("Plots/FigureS2_distances_between_sites.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
+png("Sensitivity/FigureS2_distances_between_sites.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
 par(mfrow = c(1,1), mar = c(5,5,2,2))
 hist(D,
      freq = TRUE,
@@ -1359,7 +1359,7 @@ d.vec <- seq(0, max(D), length = 100)
 Cor.M <- (Kappa * d.vec) * besselK(Kappa * d.vec, 1)
 Cor.M[1] <- 1
 
-png("Plots/FigureS4_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
+png("Sensitivity/FigureS4_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
 #' Which we plot here:
 par(mfrow=c(1,1), mar = c(5,5,2,2))
 plot(x = d.vec,
@@ -2133,7 +2133,7 @@ TableS2 <- Table12A |>
   pack_rows("Hyperparameters", nrow(Fit12A) + nrow(Fixed12A) + 1, nrow(Table12A))
 TableS2
 
-save_kable(TableS2, "Plots/TableS2_seasonal_site_model_comparison.html")
+save_kable(TableS2, "Sensitivity/TableS2_seasonal_site_model_comparison.html")
 
 #' Fixed effects shared by all four models
 FigS12 <- MyCompareBetasofModels(AllModels  = Out12A,
@@ -2141,7 +2141,7 @@ FigS12 <- MyCompareBetasofModels(AllModels  = Out12A,
                                                 "Spatial NB GLM mesh 1 + site", "Spatial NB GLM mesh 1 + both"))
 FigS12
 
-ggsave("Plots/FigureS12_seasonal_site_model_comparison.png", plot = FigS12, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
+ggsave("Sensitivity/FigureS12_seasonal_site_model_comparison.png", plot = FigS12, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
 
 
 #* Subsection 12A.6: Conclusions----
@@ -2876,7 +2876,7 @@ TableS1 <- Results |>
   column_spec(1, bold = TRUE)
 TableS1
 
-save_kable(TableS1, "Plots/TableS1_model_comparison.html")
+save_kable(TableS1, "Sensitivity/TableS1_model_comparison.html")
 
 
 
@@ -3170,7 +3170,7 @@ FigS1 <- MyCompareBetasofModels(AllModels  = list(Out2, Out2.mesh1, Out2.mesh2, 
                                 ModelNames = MyNames) #' labels defined in Section 10
 FigS1
 
-ggsave("Plots/FigureS1_fixed _effect_model_comparisons.png", plot = FigS1, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
+ggsave("Sensitivity/FigureS1_fixed _effect_model_comparisons.png", plot = FigS1, width = 12, height = 10, units = "in", bg = "white", dpi = 300)
 
 #' There are some differences between the model without and with spatial dependency.
 #' There are no major differences between the spatial models.

@@ -17,8 +17,9 @@ Diptera taxonomic indices across different environmental conditions. The
 analysis consists of 10 sequential R scripts that must be run in order
 due to data dependencies.
 
-File names in `Plots/` and `Sensitivity/` follow the figure and table
-numbering used in the manuscript and its supplement.
+Main-text figures are saved in `Plots/` and all supplementary tables and
+figures in `Sensitivity/`; file names follow the figure and table numbering
+used in the manuscript and its supplement.
 
 ## Prerequisites
 
@@ -61,14 +62,13 @@ numbering used in the manuscript and its supplement.
 │   └── Figure6_parasite_prevalence_dynamics.RDS
 │   └── Figure6_parasite_prevalence_dynamics.png
 │   └── Figure12_predicted_vector_abundance.png (not used in the manuscript)
-│   └── FigureS1_fixed _effect_model_comparisons.png
-│   └── FigureS2_distances_between_sites.png
-│   └── FigureS4_imposed_matern_correlation.png
-│   └── FigureS12_seasonal_site_model_comparison.png
+├── Sensitivity/ (all supplementary tables and figures)
 │   └── TableS1_model_comparison.html
 │   └── TableS2_seasonal_site_model_comparison.html
-├── Sensitivity/
+│   └── FigureS1_fixed _effect_model_comparisons.png
+│   └── FigureS2_distances_between_sites.png
 │   └── FigureS3_DensityDistribution_PCPriors.png
+│   └── FigureS4_imposed_matern_correlation.png
 │   └── FigureS5_sensitivity_mesh_comparison.png
 │   └── FigureS6_sensitivity_DIC_values.png
 │   └── FigureS7_sensitivity_range_estimates.png
@@ -76,6 +76,7 @@ numbering used in the manuscript and its supplement.
 │   └── FigureS9_sensitivity_MaternCorrelation2.png
 │   └── FigureS10_sensitivity_SpatialRandomField.png
 │   └── FigureS11_sensitivity_RegressionParameters.png
+│   └── FigureS12_seasonal_site_model_comparison.png
 ├── Additional data/ (hidden in .gitignore)
 │   └── Corine2018/ (user must download)
 │   └── Corine Landcover/
@@ -165,9 +166,8 @@ each rebuild `6_prediction_data.csv`, so they must be run as a set.
 **Script:** `5_model_implementation.R` - **Input:**
 `Outputs/4_diptera_taxonomic_indices_wCorine2018_TerraClimate_elevation.csv` -
 **Output:** - `Outputs/5_unique_sites_for_plotting.csv` -
-`Outputs/7_site_list.xlsx` - Main plots: `Figure3`, `Figure5` -
-Supplement: `TableS1`, `TableS2`, `FigureS1`, `FigureS2`, `FigureS4`,
-`FigureS12` - Sensitivity plots: `FigureS3`, `FigureS5` to `FigureS11` -
+`Outputs/7_site_list.xlsx` - Main plots (`Plots/`): `Figure3`, `Figure5` -
+Supplement (`Sensitivity/`): `TableS1`, `TableS2`, `FigureS1` to `FigureS12` -
 **Warning:** If `rgeoboundaries` fails, use `rnaturalearth` package. The
 full script takes a few hours, mostly the 30 models of the sensitivity
 analysis (Section 18).

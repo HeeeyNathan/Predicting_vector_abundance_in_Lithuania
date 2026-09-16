@@ -1359,7 +1359,7 @@ d.vec <- seq(0, max(D), length = 100)
 Cor.M <- (Kappa * d.vec) * besselK(Kappa * d.vec, 1)
 Cor.M[1] <- 1
 
-png("Plots/FigureS10_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
+png("Plots/FigureS4_imposed_matern_correlation.png", width = 10, height = 10, units = "in", bg = "white", res = 300)
 #' Which we plot here:
 par(mfrow=c(1,1), mar = c(5,5,2,2))
 plot(x = d.vec,
@@ -2867,6 +2867,17 @@ Results <- data.frame(Models = c("NB GLM",
 Results
 #' Lower DIC/WAIC indicates better fit; check which model is lowest after re-running.
 
+#' Save as Table S1
+TableS1 <- Results |>
+  dplyr::mutate(dplyr::across(c(DIC, WAIC), ~ round(.x, 1))) |>
+  kbl(format = "html",
+      caption = "Table S1. Comparison of DIC and WAIC values for negative binomial models of varying complexity. Neg. Bin. = Negative Binomial, GLM = Generalized Linear Model, PC = Penalized Complexity prior, DIC = Deviance Information Criterion, WAIC = Watanabe-Akaike information criterion.") |>
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE) |>
+  column_spec(1, bold = TRUE)
+TableS1
+
+save_kable(TableS1, "Plots/TableS1_model_comparison.html")
+
 
 
 # Section 16: Model validation ar1 spatial-temporal GLM----
@@ -3333,7 +3344,7 @@ CombinedPlot
 
 
 ggsave(CombinedPlot,
-       filename = "Sensitivity/FigureS3_sensisitivity_mesh_comparison.png",
+       filename = "Sensitivity/FigureS5_sensitivity_mesh_comparison.png",
        width = 14,
        height = 7,
        bg = "white",
@@ -3521,7 +3532,7 @@ ggplot(dicLong,
        fill = "DIC",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS4_sensitivity_DIC_values.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS6_sensitivity_DIC_values.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' This is what we used in the actual analysis:
 mesh1$n
@@ -3595,7 +3606,7 @@ ggplot(EstimatedRangesLong,
        fill = "P(Range < ..) = 0.5",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS5_sensitivity_range_estimates.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS7_sensitivity_range_estimates.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Conclusions:
 #' -For any mesh resolution, choice of prior is influential, no matter the coarseness of the mesh.
@@ -3660,7 +3671,7 @@ ggplot(MyData,
        color = "Prior",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS6_sensitivity_MaternCorrelation1.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS8_sensitivity_MaternCorrelation1.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' This is in principle the same information as we discussed for the posterior mean values of the range. Just go back one graph.
 #'  -For finer meshes, the ranges differences are not so different, and the lines are smoother. But not by much.
@@ -3685,7 +3696,7 @@ ggplot(MyData,
        color = "mesh resolution",
        caption = "Sigma_u = c(2, 0.05)")
 
-ggsave("Sensitivity/FigureS7_sensitivity_MaternCorrelation2.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS9_sensitivity_MaternCorrelation2.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Same as in the previous two pictures.
 #'  -No so much difference in the Matern correlation for different meshes.
@@ -3774,7 +3785,7 @@ combined_plot_sensitivity <- eqr + elevation + ppt + tmin +
 combined_plot_sensitivity
 
 
-ggsave("Sensitivity/FigureS9_sensitivity_RegressionParameters.png", width = 20, height = 20, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS11_sensitivity_RegressionParameters.png", width = 20, height = 20, dpi = 300, bg = "white")
 
 #' Conclusions:
 #'  - it seems range prior does not have much influence on the regression parameters. The mesh size does not seem to have much influence either.
@@ -3882,7 +3893,7 @@ ggplot(data = CroppedLithuania_UTM) +
        caption = "Sigma_u = c(2, 0.05)")  +
   facet_grid(PriorRange ~ MeshName)
 
-ggsave("Sensitivity/FigureS8_sensitivity_SpatialRandomField.png", width = 10, height = 8, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS10_sensitivity_SpatialRandomField.png", width = 10, height = 8, dpi = 300, bg = "white")
 
 #' Interpretations
 #'   -All panels look very similar. This is good news.
@@ -4010,7 +4021,7 @@ combined_plot <- p1 + p2 +
 # Display the combined plot
 combined_plot
 
-ggsave("Sensitivity/FigureS11_DensityDistribution_PCPriors.png", width = 10, height = 10, dpi = 300, bg = "white")
+ggsave("Sensitivity/FigureS3_DensityDistribution_PCPriors.png", width = 10, height = 10, dpi = 300, bg = "white")
 
 #' Section 19: Clean up----
 library(pacman)

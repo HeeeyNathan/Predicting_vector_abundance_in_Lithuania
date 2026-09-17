@@ -444,7 +444,7 @@ MyDataCombined1$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined1$artificial.std  <- mean(df$artificial.std)
 MyDataCombined1$natural.std     <- mean(df$natural.std)
 MyDataCombined1$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined1$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type)) # For waterbody_type, create a proper factor with the same levels as in the original data
+MyDataCombined1$waterbody_type  <- factor("River", levels = levels(df$waterbody_type)) # For waterbody_type, create a proper factor with the same levels as in the original data
 
 # PPT
 MyDataCombined2$eqr.std         <- mean(df$eqr.std)
@@ -455,7 +455,7 @@ MyDataCombined2$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined2$artificial.std  <- mean(df$artificial.std)
 MyDataCombined2$natural.std     <- mean(df$natural.std)
 MyDataCombined2$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined2$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
+MyDataCombined2$waterbody_type  <- factor("River", levels = levels(df$waterbody_type))
 
 # TMIN
 MyDataCombined3$eqr.std         <- mean(df$eqr.std)
@@ -466,7 +466,7 @@ MyDataCombined3$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined3$artificial.std  <- mean(df$artificial.std)
 MyDataCombined3$natural.std     <- mean(df$natural.std)
 MyDataCombined3$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined3$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
+MyDataCombined3$waterbody_type  <- factor("River", levels = levels(df$waterbody_type))
 
 # ELEVATION
 MyDataCombined4$eqr.std         <- mean(df$eqr.std)
@@ -477,7 +477,7 @@ MyDataCombined4$agriculture.std <- mean(df$agriculture.std)
 MyDataCombined4$artificial.std  <- mean(df$artificial.std)
 MyDataCombined4$natural.std     <- mean(df$natural.std)
 MyDataCombined4$year.std        <- (max(df$year) - mean(df$year)) / sd(df$year)
-MyDataCombined4$waterbody_type  <- factor("Lake", levels = levels(df$waterbody_type))
+MyDataCombined4$waterbody_type  <- factor("River", levels = levels(df$waterbody_type))
 
 # Make the X matrix using model.matrix()
 XpCombined1 <- model.matrix(~ eqr.std + ppt.std + tmin.std + ws.std + elevation.std +

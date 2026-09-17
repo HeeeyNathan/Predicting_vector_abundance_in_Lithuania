@@ -31,3 +31,8 @@ packrat/
 
 # Temporary output files during processing
 *.Rout
+
+# Claude Code (AI assistant) files - local only, not part of the analysis
+.claude/
+CLAUDE.md
+CLAUDE.local.md
